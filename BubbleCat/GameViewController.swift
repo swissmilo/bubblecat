@@ -25,7 +25,10 @@ class GameViewController: UIViewController {
         /* Set the scale mode to scale to fit the window */
         let scene = GameScene(size: view.bounds.size)
         scene.scaleMode = .AspectFit
-            
+        
+        print("width " + String(view.bounds.size.width))
+        print("height " + String(view.bounds.size.height))
+        
         skView.presentScene(scene)
     }
 

@@ -8,14 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		262025B81CB36A1E00BD637E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262025B71CB36A1E00BD637E /* AppDelegate.swift */; };
-		262025BA1CB36A1E00BD637E /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 262025B91CB36A1E00BD637E /* GameScene.sks */; };
 		262025BC1CB36A1E00BD637E /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262025BB1CB36A1E00BD637E /* GameScene.swift */; };
 		262025BE1CB36A1E00BD637E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262025BD1CB36A1E00BD637E /* GameViewController.swift */; };
-		262025C11CB36A1E00BD637E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 262025BF1CB36A1E00BD637E /* Main.storyboard */; };
 		262025C31CB36A1E00BD637E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 262025C21CB36A1E00BD637E /* Assets.xcassets */; };
-		262025C61CB36A1E00BD637E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 262025C41CB36A1E00BD637E /* LaunchScreen.storyboard */; };
 		262025D11CB36A1E00BD637E /* BubbleCatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262025D01CB36A1E00BD637E /* BubbleCatTests.swift */; };
 		262025DC1CB36A1E00BD637E /* BubbleCatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262025DB1CB36A1E00BD637E /* BubbleCatUITests.swift */; };
+		26C037BB1CB4CE3D002F58AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C037B91CB4CE3D002F58AE /* Main.storyboard */; };
+		26C037BE1CB4CF68002F58AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C037BC1CB4CF68002F58AE /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,12 +37,9 @@
 /* Begin PBXFileReference section */
 		262025B41CB36A1E00BD637E /* BubbleCat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BubbleCat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		262025B71CB36A1E00BD637E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		262025B91CB36A1E00BD637E /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		262025BB1CB36A1E00BD637E /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		262025BD1CB36A1E00BD637E /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		262025C01CB36A1E00BD637E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		262025C21CB36A1E00BD637E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		262025C51CB36A1E00BD637E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		262025C71CB36A1E00BD637E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		262025CC1CB36A1E00BD637E /* BubbleCatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BubbleCatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		262025D01CB36A1E00BD637E /* BubbleCatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleCatTests.swift; sourceTree = "<group>"; };
@@ -51,6 +47,8 @@
 		262025D71CB36A1E00BD637E /* BubbleCatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BubbleCatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		262025DB1CB36A1E00BD637E /* BubbleCatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleCatUITests.swift; sourceTree = "<group>"; };
 		262025DD1CB36A1E00BD637E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		26C037BA1CB4CE3D002F58AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		26C037BD1CB4CF68002F58AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,13 +99,12 @@
 		262025B61CB36A1E00BD637E /* BubbleCat */ = {
 			isa = PBXGroup;
 			children = (
+				26C037B91CB4CE3D002F58AE /* Main.storyboard */,
+				26C037BC1CB4CF68002F58AE /* LaunchScreen.storyboard */,
 				262025B71CB36A1E00BD637E /* AppDelegate.swift */,
-				262025B91CB36A1E00BD637E /* GameScene.sks */,
 				262025BB1CB36A1E00BD637E /* GameScene.swift */,
 				262025BD1CB36A1E00BD637E /* GameViewController.swift */,
-				262025BF1CB36A1E00BD637E /* Main.storyboard */,
 				262025C21CB36A1E00BD637E /* Assets.xcassets */,
-				262025C41CB36A1E00BD637E /* LaunchScreen.storyboard */,
 				262025C71CB36A1E00BD637E /* Info.plist */,
 			);
 			path = BubbleCat;
@@ -236,10 +233,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				262025BA1CB36A1E00BD637E /* GameScene.sks in Resources */,
-				262025C61CB36A1E00BD637E /* LaunchScreen.storyboard in Resources */,
+				26C037BE1CB4CF68002F58AE /* LaunchScreen.storyboard in Resources */,
 				262025C31CB36A1E00BD637E /* Assets.xcassets in Resources */,
-				262025C11CB36A1E00BD637E /* Main.storyboard in Resources */,
+				26C037BB1CB4CE3D002F58AE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,18 +298,18 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		262025BF1CB36A1E00BD637E /* Main.storyboard */ = {
+		26C037B91CB4CE3D002F58AE /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				262025C01CB36A1E00BD637E /* Base */,
+				26C037BA1CB4CE3D002F58AE /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		262025C41CB36A1E00BD637E /* LaunchScreen.storyboard */ = {
+		26C037BC1CB4CF68002F58AE /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				262025C51CB36A1E00BD637E /* Base */,
+				26C037BD1CB4CF68002F58AE /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -501,6 +497,7 @@
 				262025E21CB36A1F00BD637E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		262025E31CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleCatTests" */ = {
 			isa = XCConfigurationList;
@@ -509,6 +506,7 @@
 				262025E51CB36A1F00BD637E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		262025E61CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleCatUITests" */ = {
 			isa = XCConfigurationList;
@@ -517,6 +515,7 @@
 				262025E81CB36A1F00BD637E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

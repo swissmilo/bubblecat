@@ -22,8 +22,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let ballName = "ball"
     var isFingerOnSwipe = false
     
-    let controlPanelHeight:CGFloat = 75
-    let controlPanelWidth:CGFloat = 600
+    var controlPanelHeight:CGFloat = 0
+    var controlPanelWidth:CGFloat = 0
     
     var swipeNode: SKShapeNode
     var buttonNode: SKShapeNode
@@ -53,6 +53,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.speed = 1
         
         backgroundColor = UIColor.whiteColor()
+        
+        controlPanelHeight = 70
+        controlPanelWidth = self.frame.width * 0.85
+        
         
         physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRect(x:self.frame.minX,y:self.frame.minY+controlPanelHeight,width:self.frame.maxX,height:self.frame.maxX-controlPanelHeight))
         physicsBody!.friction = 0
@@ -96,6 +100,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         actorNode.physicsBody!.dynamic = false
         actorNode.physicsBody!.usesPreciseCollisionDetection = true
         actorNode.physicsBody!.categoryBitMask = ActorCategory
+        actorNode.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
         
         addChild(actorNode)
         
@@ -125,23 +130,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
-        isFingerOnSwipe = false
+        let touch:UITouch = touches.first!
+        let touchLocation = touch.locationInNode(self)
+        
+        if let body = physicsWorld.bodyAtPoint(touchLocation) {
+            if body.node!.name == swipeAreaName {
+                    isFingerOnSwipe = false
+            }
+        }
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         if let touch = touches.first{
+            let touchLocation = touch.locationInNode(self)
             
             if isFingerOnSwipe {
 
-                let touchLocation = touch.locationInNode(self)
-                let previousLocation = touch.previousLocationInNode(self)
-                
-                let swipeChange = (touchLocation.x - previousLocation.x)
-                
-                let action = SKAction.moveByX(swipeChange, y:0, duration: 0.1)
-                
-                actorNode.runAction(action)
+                if let body = physicsWorld.bodyAtPoint(touchLocation) {
+                    if body.node!.name == swipeAreaName {
+                        
+                        let previousLocation = touch.previousLocationInNode(self)
+                        
+                        let swipeChange = (touchLocation.x - previousLocation.x) * 1.5
+                        
+                        let action = SKAction.moveByX(swipeChange, y:0, duration: 0.1)
+                        
+                        actorNode.runAction(action)
+                    }
+                }
             }
             
         }
@@ -231,23 +248,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         shotNode.physicsBody!.applyImpulse(CGVectorMake(0, 2))
     }
     
-    func isGameOver() -> Bool {
+    func isGameFinished() -> Bool {
         if (self.childNodeWithName(ballName) == nil) {
-            return false
-        }
-        else {
+            let ballNode = createBall(CGPoint(x:self.frame.size.width/2, y:self.frame.size.height/2), scale: 1.0)
+            ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
             
-            print("win")
             return true
         }
+        return true
     }
 
    
     override func update(currentTime: CFTimeInterval) {
-        isGameOver()
+        isGameFinished()
         
         let maxSpeed: CGFloat = 700.0
         let hyperSpeed: CGFloat = 1000.0
+        
+        // keep actor inside the x-boundary of the screen
+        if(actorNode.position.x <= actorNode.size.width/2) {
+            actorNode.position.x = actorNode.size.width/2
+        }
+        else if(actorNode.position.x >= frame.size.width-actorNode.size.width/2) {
+            actorNode.position.x = frame.size.width-actorNode.size.width/2
+        }
         
         //let ball = self.childNodeWithName(ballName) as! SKSpriteNode
         self.enumerateChildNodesWithName(ballName, usingBlock: {
@@ -270,6 +294,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
         })
-        
     }
+
+    
+   /*
+    func convert(point: CGPoint)->CGPoint {
+        return self.view!.convertPoint(CGPoint(x: point.x, y:self.view!.frame.height-point.y), toScene:self)
+    }*/
 }
