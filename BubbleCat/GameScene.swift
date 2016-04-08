@@ -25,15 +25,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var controlPanelHeight:CGFloat = 0
     var controlPanelWidth:CGFloat = 0
     
-    var swipeNode: SKShapeNode
-    var buttonNode: SKShapeNode
-    var actorNode: SKSpriteNode
+    var swipeNode: SKShapeNode = SKShapeNode()
+    var buttonNode: SKShapeNode = SKShapeNode()
+    var actorNode: SKSpriteNode = SKSpriteNode()
+    var countdownNode: SKLabelNode = SKLabelNode()
+    var livesNode: SKLabelNode = SKLabelNode()
+    
+    var walkFrames = [SKTexture]()
+    var actorWalkingDirectionMultiplier : CGFloat = 1
+    var isActorMoving : Bool = false
+    
+    var gameRunning = false
+    var startCountdown = false
+    var startTime:CFTimeInterval = CFTimeInterval()
+    
+    var timeLimit = 100
+    var lives = 3
     
     override init(size: CGSize) {
-        
-        swipeNode = SKShapeNode()
-        buttonNode = SKShapeNode()
-        actorNode = SKSpriteNode()
         
         super.init(size: size)
     }
@@ -88,9 +97,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //print(panelSize)
         addChild(buttonNode)
   
-        actorNode = SKSpriteNode(imageNamed:"actor")
-        actorNode.position = CGPoint(x:self.frame.size.width/2-200, y:controlPanelHeight + actorNode.size.height / 2)
         
+        let actorAnimatedAtlas = SKTextureAtlas(named: "BearImages")
+        
+        let numImages = actorAnimatedAtlas.textureNames.count
+        for i in 1...numImages {
+            let actorTextureName = "bear\(i)"
+            walkFrames.append(actorAnimatedAtlas.textureNamed(actorTextureName))
+        }
+        
+        actorNode = SKSpriteNode(texture: walkFrames[0])
+        actorNode.size.width = 70
+        actorNode.size.height = 50
+        actorNode.position = CGPoint(x:self.frame.size.width/2-200, y:controlPanelHeight + actorNode.size.height / 2)
+
         actorNode.physicsBody = SKPhysicsBody(rectangleOfSize: actorNode.size)
         actorNode.physicsBody!.allowsRotation = false
         actorNode.physicsBody!.friction = 0
@@ -101,17 +121,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         actorNode.physicsBody!.usesPreciseCollisionDetection = true
         actorNode.physicsBody!.categoryBitMask = ActorCategory
         actorNode.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
-        
         addChild(actorNode)
-        
-        
-        let ballNode = createBall(CGPoint(x:self.frame.size.width/2, y:self.frame.size.height/2), scale: 1.0)
-        ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
-      
+    }
+    
+    
+    func walkActor() {
+        if(isActorMoving == false) {
+            isActorMoving = true
+            
+            actorNode.runAction(SKAction.repeatActionForever(
+                SKAction.animateWithTextures(walkFrames,
+                    timePerFrame: 0.1,
+                    resize: false,
+                    restore: true)),
+                                withKey:"walkingInPlace")
+        }
+    }
+    
+    func stopWalkingActor() {
+        if(isActorMoving) {
+            actorNode.removeActionForKey("walkingInPlace")
+            isActorMoving = false
+        }
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
        // Called when a touch begins
+        
+        if(gameRunning == false) {
+            beginGame()
+        }
         
         let touch:UITouch = touches.first!
         let touchLocation = touch.locationInNode(self)
@@ -136,6 +175,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if let body = physicsWorld.bodyAtPoint(touchLocation) {
             if body.node!.name == swipeAreaName {
                     isFingerOnSwipe = false
+                    stopWalkingActor()
             }
         }
     }
@@ -153,6 +193,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         let previousLocation = touch.previousLocationInNode(self)
                         
                         let swipeChange = (touchLocation.x - previousLocation.x) * 1.5
+                        
+                        actorWalkingDirectionMultiplier = swipeChange > 0 ? -1 : 1
+                        actorNode.xScale = fabs(actorNode.xScale) * actorWalkingDirectionMultiplier
+                        walkActor()
                         
                         let action = SKAction.moveByX(swipeChange, y:0, duration: 0.1)
                         
@@ -182,8 +226,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == HookCategory {
             
             if((firstBody.node?.xScale)! > 0.9) {
-            createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 2.0).physicsBody!.applyImpulse(CGVectorMake(5, 0))
-            createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 2.0).physicsBody!.applyImpulse(CGVectorMake(-5, 0))
+            createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(5, 0))
+            createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(-5, 0))
             }
             
             firstBody.node?.removeFromParent()
@@ -197,11 +241,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ActorCategory {
             
-            print("game over")
-            /*if let mainView = view {
-                let gameOverScene = GameOverScene.unarchiveFromFile("GameOverScene") as! GameOverScene
-                mainView.presentScene(gameOverScene)
-            }*/
+            lives -= 1
+            livesNode.text = "\(lives) Lifes"
+            if(lives <= 0) {
+                beginGameover()
+            }
         }
     }
     
@@ -249,13 +293,53 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func isGameFinished() -> Bool {
-        if (self.childNodeWithName(ballName) == nil) {
+        if (gameRunning && self.childNodeWithName(ballName) == nil) {
             let ballNode = createBall(CGPoint(x:self.frame.size.width/2, y:self.frame.size.height/2), scale: 1.0)
             ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
-            
+            print("no more balls")
             return true
         }
         return true
+    }
+    
+    func beginGame() {
+        
+        countdownNode = SKLabelNode(fontNamed: "Futura-Medium")
+        countdownNode.fontSize = 50;
+        countdownNode.position = CGPointMake(CGRectGetMidX(self.frame)-100, CGRectGetMaxY(self.frame)*0.85)
+        countdownNode.fontColor = SKColor.blackColor()
+        countdownNode.name = "countDown";
+        countdownNode.zPosition = 100;
+        addChild(countdownNode)
+        
+        livesNode = SKLabelNode(fontNamed: "Futura-Medium")
+        livesNode.fontSize = 50;
+        livesNode.position = CGPointMake(CGRectGetMidX(self.frame)+100, CGRectGetMaxY(self.frame)*0.85)
+        livesNode.fontColor = SKColor.blackColor()
+        livesNode.name = "lives";
+        livesNode.zPosition = 100;
+        livesNode.text = "\(lives) Lifes"
+        addChild(livesNode)
+        
+        let ballNode = createBall(CGPoint(x:self.frame.size.width/2+50, y:self.frame.size.height/2+100), scale: 2.0)
+        ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
+        
+        let ballNode2 = createBall(CGPoint(x:self.frame.size.width/2-50, y:self.frame.size.height/2+100), scale: 2.0)
+        ballNode2.physicsBody!.applyImpulse(CGVectorMake(-5, 0))
+        
+        startCountdown = true
+        gameRunning = true
+    }
+    
+    func beginGameover() {
+        gameRunning = false
+        
+        let transition = SKTransition.revealWithDirection(SKTransitionDirection.Down, duration: 1.0)
+
+        let newscene = GameoverScene(size: view!.bounds.size)
+        newscene.scaleMode = .AspectFit
+
+        self.scene!.view!.presentScene(newscene, transition: transition)
     }
 
    
@@ -264,6 +348,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let maxSpeed: CGFloat = 700.0
         let hyperSpeed: CGFloat = 1000.0
+        
+        // game countdown
+        if(startCountdown) {
+            startTime = currentTime
+            startCountdown = false
+        }
+        let countDown = timeLimit - (Int)(currentTime-startTime)
+        if(countDown >= 0) {
+            countdownNode.text = String(countDown)
+        }
+        else {
+            if(gameRunning) {
+                beginGameover()
+            }
+        }
         
         // keep actor inside the x-boundary of the screen
         if(actorNode.position.x <= actorNode.size.width/2) {

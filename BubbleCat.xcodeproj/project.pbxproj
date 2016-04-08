@@ -13,6 +13,8 @@
 		262025C31CB36A1E00BD637E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 262025C21CB36A1E00BD637E /* Assets.xcassets */; };
 		262025D11CB36A1E00BD637E /* BubbleCatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262025D01CB36A1E00BD637E /* BubbleCatTests.swift */; };
 		262025DC1CB36A1E00BD637E /* BubbleCatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262025DB1CB36A1E00BD637E /* BubbleCatUITests.swift */; };
+		26B7D9081CB76686006885F0 /* BearImages.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 26B7D9071CB76686006885F0 /* BearImages.atlas */; };
+		26B7D90A1CB77D07006885F0 /* GameoverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B7D9091CB77D07006885F0 /* GameoverScene.swift */; };
 		26C037BB1CB4CE3D002F58AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C037B91CB4CE3D002F58AE /* Main.storyboard */; };
 		26C037BE1CB4CF68002F58AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C037BC1CB4CF68002F58AE /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -47,6 +49,8 @@
 		262025D71CB36A1E00BD637E /* BubbleCatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BubbleCatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		262025DB1CB36A1E00BD637E /* BubbleCatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleCatUITests.swift; sourceTree = "<group>"; };
 		262025DD1CB36A1E00BD637E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		26B7D9071CB76686006885F0 /* BearImages.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BearImages.atlas; sourceTree = "<group>"; };
+		26B7D9091CB77D07006885F0 /* GameoverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameoverScene.swift; sourceTree = "<group>"; };
 		26C037BA1CB4CE3D002F58AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		26C037BD1CB4CF68002F58AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -99,6 +103,7 @@
 		262025B61CB36A1E00BD637E /* BubbleCat */ = {
 			isa = PBXGroup;
 			children = (
+				26B7D9071CB76686006885F0 /* BearImages.atlas */,
 				26C037B91CB4CE3D002F58AE /* Main.storyboard */,
 				26C037BC1CB4CF68002F58AE /* LaunchScreen.storyboard */,
 				262025B71CB36A1E00BD637E /* AppDelegate.swift */,
@@ -106,6 +111,7 @@
 				262025BD1CB36A1E00BD637E /* GameViewController.swift */,
 				262025C21CB36A1E00BD637E /* Assets.xcassets */,
 				262025C71CB36A1E00BD637E /* Info.plist */,
+				26B7D9091CB77D07006885F0 /* GameoverScene.swift */,
 			);
 			path = BubbleCat;
 			sourceTree = "<group>";
@@ -236,6 +242,7 @@
 				26C037BE1CB4CF68002F58AE /* LaunchScreen.storyboard in Resources */,
 				262025C31CB36A1E00BD637E /* Assets.xcassets in Resources */,
 				26C037BB1CB4CE3D002F58AE /* Main.storyboard in Resources */,
+				26B7D9081CB76686006885F0 /* BearImages.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +269,7 @@
 			files = (
 				262025BC1CB36A1E00BD637E /* GameScene.swift in Sources */,
 				262025BE1CB36A1E00BD637E /* GameViewController.swift in Sources */,
+				26B7D90A1CB77D07006885F0 /* GameoverScene.swift in Sources */,
 				262025B81CB36A1E00BD637E /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
