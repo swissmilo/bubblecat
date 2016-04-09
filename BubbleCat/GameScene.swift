@@ -8,10 +8,10 @@
 
 import SpriteKit
 
-let BallCategory   : UInt32 = 0x1 << 0
-let HookCategory : UInt32 = 0x1 << 1
-let ActorCategory  : UInt32 = 0x1 << 2
-let ObstacleCategory : UInt32 = 0x1 << 3
+let BallCategory   : UInt32 = 0x1 << 1
+let HookCategory : UInt32 = 0x1 << 2
+let ActorCategory  : UInt32 = 0x1 << 3
+let ObstacleCategory : UInt32 = 0x1 << 4
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -58,7 +58,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         physicsWorld.contactDelegate = self
         
-        physicsWorld.gravity = CGVectorMake(0.0, -9.8);
+        physicsWorld.gravity = CGVectorMake(0.0, -7);
         physicsWorld.speed = 1
         
         backgroundColor = UIColor.whiteColor()
@@ -79,6 +79,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let panelSize = CGSize(width:controlPanelWidth,height:controlPanelHeight)
         swipeNode = SKShapeNode(rectOfSize: panelSize)
         swipeNode.position = CGPoint(x: panelSize.width/2,y: panelSize.height/2)
+        swipeNode.zPosition = 100
         swipeNode.fillColor = UIColor.redColor()
         swipeNode.physicsBody = SKPhysicsBody(rectangleOfSize: panelSize)
         swipeNode.physicsBody!.dynamic = false
@@ -90,6 +91,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let buttonSize = CGSize(width:self.frame.size.width - controlPanelWidth,height:controlPanelHeight)
         buttonNode = SKShapeNode(rectOfSize: buttonSize)
         buttonNode.position = CGPoint(x: controlPanelWidth + buttonSize.width/2,y: buttonSize.height/2)
+        buttonNode.zPosition = 100
         buttonNode.fillColor = UIColor.blueColor()
         buttonNode.physicsBody = SKPhysicsBody(rectangleOfSize: buttonSize)
         buttonNode.physicsBody!.dynamic = false
@@ -111,7 +113,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         actorNode.size.height = 50
         actorNode.position = CGPoint(x:self.frame.size.width/2-200, y:controlPanelHeight + actorNode.size.height / 2)
 
-        actorNode.physicsBody = SKPhysicsBody(rectangleOfSize: actorNode.size)
+        //actorNode.physicsBody = SKPhysicsBody(rectangleOfSize: actorNode.size)
+        actorNode.physicsBody = SKPhysicsBody(texture: walkFrames[0], size: actorNode.size)
         actorNode.physicsBody!.allowsRotation = false
         actorNode.physicsBody!.friction = 0
         actorNode.physicsBody!.restitution = 0
@@ -120,6 +123,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         actorNode.physicsBody!.dynamic = false
         actorNode.physicsBody!.usesPreciseCollisionDetection = true
         actorNode.physicsBody!.categoryBitMask = ActorCategory
+        actorNode.physicsBody!.collisionBitMask = ObstacleCategory
         actorNode.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
         addChild(actorNode)
     }
@@ -265,6 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         newballNode.name = ballName
         
         newballNode.physicsBody!.categoryBitMask = BallCategory
+        newballNode.physicsBody!.collisionBitMask = ActorCategory | HookCategory | ObstacleCategory
         newballNode.physicsBody!.contactTestBitMask = ActorCategory | HookCategory
         
         addChild(newballNode)
@@ -273,9 +278,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createShot() {
         let shotSize = CGSize(width: 10,height: 10)
-        let shotNode = SKShapeNode(rectOfSize: shotSize)
+        //let shotNode = SKShapeNode(rectOfSize: shotSize)
+        let shotNode = SKSpriteNode(imageNamed:"anchor")
         shotNode.position = CGPoint(x: actorNode.position.x, y: actorNode.position.y+30)
-        shotNode.fillColor = UIColor.redColor()
+        //shotNode.fillColor = UIColor.redColor()
         shotNode.physicsBody = SKPhysicsBody(rectangleOfSize: shotSize)
         shotNode.physicsBody!.allowsRotation = false
         shotNode.physicsBody!.friction = 0
@@ -285,21 +291,59 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         shotNode.physicsBody!.usesPreciseCollisionDetection = true
         shotNode.physicsBody?.affectedByGravity = false
         shotNode.physicsBody!.categoryBitMask = HookCategory
+        shotNode.physicsBody!.collisionBitMask = 0
         shotNode.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
         shotNode.name = "hook"
         addChild(shotNode)
         
-        shotNode.physicsBody!.applyImpulse(CGVectorMake(0, 2))
+        let rope = SKSpriteNode(imageNamed:"rope")
+        rope.size.height = 50//self.view!.frame.height
+        rope.position.y = -rope.size.height
+        rope.position.x = 0
+        rope.physicsBody = SKPhysicsBody(rectangleOfSize: rope.size)
+        rope.physicsBody!.allowsRotation = false
+        rope.physicsBody!.friction = 0
+        rope.physicsBody!.restitution = 0
+        rope.physicsBody!.linearDamping = 0
+        rope.physicsBody!.angularDamping = 0
+        rope.physicsBody!.usesPreciseCollisionDetection = true
+        rope.physicsBody?.affectedByGravity = false
+        rope.physicsBody?.dynamic = false
+        rope.physicsBody!.categoryBitMask = HookCategory
+        rope.physicsBody!.collisionBitMask = 0
+        rope.physicsBody!.contactTestBitMask = BallCategory
+        rope.name = "rope"
+        shotNode.addChild(rope)
+        
+        /*physicsWorld.addJoint(SKPhysicsJointFixed.jointWithBodyA(shotNode.physicsBody!,
+                       bodyB: rope.physicsBody!,
+                       anchor: CGPointMake(shotNode.position.x, shotNode.position.y)))*/
+        
+        shotNode.physicsBody!.applyImpulse(CGVectorMake(0, 1.2))
+        
+/* 
+ CGSize mergedSize = CGSizeMake(WIDTH_HERO, HEIGHT_HERO);
+ UIGraphicsBeginImageContextWithOptions(mergedSize, NO, 0.0f);
+ 
+ [textureImage1 drawInRect:CGRectMake(0, 0, WIDTH_HERO, textureImage1.size.height)];
+ [textureImage2 drawInRect:CGRectMake(0, 40, WIDTH_HERO, textureImage2.size.height)];
+ [textureImage3 drawInRect:CGRectMake(0, 0, WIDTH_HERO, textureImage3.size.height)];
+ 
+ UIImage *mergedImage = UIGraphicsGetImageFromCurrentImageContext();
+ UIGraphicsEndImageContext();
+ 
+ [self setTexture:[SKTexture textureWithImage:mergedImage]];
+ */
     }
     
     func isGameFinished() -> Bool {
-        if (gameRunning && self.childNodeWithName(ballName) == nil) {
-            let ballNode = createBall(CGPoint(x:self.frame.size.width/2, y:self.frame.size.height/2), scale: 1.0)
-            ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
+        if (gameRunning && (self.childNodeWithName(ballName) == nil)) {
+            //let ballNode = createBall(CGPoint(x:self.frame.size.width/2, y:self.frame.size.height/2), scale: 1.0)
+            //ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
             print("no more balls")
             return true
         }
-        return true
+        return false
     }
     
     func beginGame() {
@@ -341,10 +385,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         self.scene!.view!.presentScene(newscene, transition: transition)
     }
+    
+    func beginNextLevel() {
+        gameRunning = false
+        
+        let transition = SKTransition.revealWithDirection(SKTransitionDirection.Down, duration: 1.0)
+        
+        let newscene = NextScene(size: view!.bounds.size)
+        newscene.scaleMode = .AspectFit
+        
+        self.scene!.view!.presentScene(newscene, transition: transition)
+    }
+    
+    override func didSimulatePhysics() {
+        self.enumerateChildNodesWithName("hook", usingBlock: {
+            (hookChild: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
+
+            //let hookChild = self.childNodeWithName("hook")
+            if(hookChild != nil) {
+                let ropeChild = hookChild!.childNodeWithName("rope")
+                
+                if(ropeChild != nil && hookChild != nil) {
+                    let height = (ropeChild as! SKSpriteNode).size.height
+                    ropeChild!.position.y = -height
+                }
+            }
+        })
+    }
 
    
     override func update(currentTime: CFTimeInterval) {
-        isGameFinished()
+        if(isGameFinished()) {
+            beginNextLevel()
+        }
         
         let maxSpeed: CGFloat = 700.0
         let hyperSpeed: CGFloat = 1000.0
@@ -393,6 +466,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
         })
+        
     }
 
     
