@@ -32,6 +32,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var livesNode: SKLabelNode = SKLabelNode()
     
     var walkFrames = [SKTexture]()
+    var tiledRope = SKTexture()
     var actorWalkingDirectionMultiplier : CGFloat = 1
     var isActorMoving : Bool = false
     
@@ -42,6 +43,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var timeLimit = 100
     var lives = 3
     
+    var hooks = [Hook]()
+    
     override init(size: CGSize) {
         
         super.init(size: size)
@@ -51,10 +54,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setTiledFillTexture(imageName: String, tileSize: CGSize, targetSize: CGSize) -> SKTexture {
+
+        let targetRef = UIImage(named: imageName)!.CGImage
+        
+        UIGraphicsBeginImageContext(targetSize)
+        let contextRef = UIGraphicsGetCurrentContext()
+        CGContextDrawTiledImage(contextRef, CGRect(origin: CGPointZero, size: tileSize), targetRef)
+        let tiledTexture = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return SKTexture(image: tiledTexture)
+    }
+    
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         
-        view.showsPhysics = true
+        //view.showsPhysics = true
         
         physicsWorld.contactDelegate = self
         
@@ -67,13 +83,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         controlPanelWidth = self.frame.width * 0.85
         
         
-        physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRect(x:self.frame.minX,y:self.frame.minY+controlPanelHeight,width:self.frame.maxX,height:self.frame.maxX-controlPanelHeight))
+        physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRect(x:self.frame.minX,y:self.frame.minY+controlPanelHeight,width:self.frame.maxX,height:self.frame.maxY-controlPanelHeight))
+        /*print("x: \(self.frame.minX)")
+        print("y: \(self.frame.minY+controlPanelHeight)")
+        print("height: \(self.frame.maxX-controlPanelHeight-50)")
+        print("height2: \(self.frame.height)")
+        print("width: \(self.frame.maxX)")*/
         physicsBody!.friction = 0
         physicsBody!.categoryBitMask = ObstacleCategory
         //physicsBody!.dynamic = false
         
         //backgroundMusic.autoplayLooped = true
         //addChild(backgroundMusic)
+        
+        
+        tiledRope = setTiledFillTexture("rope", tileSize: CGSize(width: 6, height: 32), targetSize: CGSize(width: 6, height: self.frame.height-controlPanelHeight))
+        
+        /*
+         CGSize mergedSize = CGSizeMake(WIDTH_HERO, HEIGHT_HERO);
+         UIGraphicsBeginImageContextWithOptions(mergedSize, NO, 0.0f);
+         
+         [textureImage1 drawInRect:CGRectMake(0, 0, WIDTH_HERO, textureImage1.size.height)];
+         [textureImage2 drawInRect:CGRectMake(0, 40, WIDTH_HERO, textureImage2.size.height)];
+         [textureImage3 drawInRect:CGRectMake(0, 0, WIDTH_HERO, textureImage3.size.height)];
+         
+         UIImage *mergedImage = UIGraphicsGetImageFromCurrentImageContext();
+         UIGraphicsEndImageContext();
+         
+         [self setTexture:[SKTexture textureWithImage:mergedImage]];
+         */
         
         
         let panelSize = CGSize(width:controlPanelWidth,height:controlPanelHeight)
@@ -126,6 +164,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         actorNode.physicsBody!.collisionBitMask = ObstacleCategory
         actorNode.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
         addChild(actorNode)
+        
+        hooks.append(Hook(hookName: "hook1", ladderHeight: self.view!.frame.height - controlPanelHeight))
+        hooks.append(Hook(hookName: "hook2", ladderHeight: self.view!.frame.height - controlPanelHeight))
     }
     
     
@@ -229,17 +270,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == HookCategory {
             
-            if((firstBody.node?.xScale)! > 0.9) {
-            createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(5, 0))
-            createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(-5, 0))
+            if(firstBody.node != nil) {
+                if((firstBody.node?.xScale)! > 0.9) {
+                createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(5, 0))
+                createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(-5, 0))
+                }
             }
             
             firstBody.node?.removeFromParent()
-            secondBody.node?.removeFromParent()
+            if(secondBody.node?.parent?.physicsBody?.categoryBitMask == HookCategory) {
+                secondBody.node?.parent?.removeFromParent()
+            } else {
+                secondBody.node?.removeFromParent()
+            }
         }
         
         if firstBody.categoryBitMask == HookCategory && secondBody.categoryBitMask == ObstacleCategory {
             
+            print("hook ends")
+            firstBody.node?.removeAllActions()
             firstBody.node?.removeFromParent()
         }
         
@@ -277,10 +326,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createShot() {
+        
+        let hook1 = childNodeWithName("hook1")
+        let hook2 = childNodeWithName("hook2")
+        
+        // Can only shoot up to two hooks at once
+        var selectedHook:Hook
+        if(hook1 == nil) {
+            selectedHook = hooks[0]
+        } else if(hook2 == nil) {
+            selectedHook = hooks[1]
+        }
+        else {
+            // If both hooks have been fired already, reset the first one fired
+            selectedHook = (hook1 as! Hook).position.y > (hook2 as! Hook).position.y ? (hook1 as! Hook) : (hook2 as! Hook)
+            selectedHook.removeAllActions()
+            selectedHook.removeFromParent()
+        }
+        
+        // fire hook above actor
+        selectedHook.position = CGPoint(x: actorNode.position.x, y: actorNode.position.y+actorNode.size.height)
+        addChild(selectedHook)
+        selectedHook.physicsBody!.applyImpulse(CGVectorMake(0, 1.2))
+        
+        // keep track of the two in move
+    /*
         let shotSize = CGSize(width: 10,height: 10)
         //let shotNode = SKShapeNode(rectOfSize: shotSize)
         let shotNode = SKSpriteNode(imageNamed:"anchor")
-        shotNode.position = CGPoint(x: actorNode.position.x, y: actorNode.position.y+30)
+        shotNode.size = shotSize
+        shotNode.position = CGPoint(x: actorNode.position.x, y: actorNode.position.y+actorNode.size.height)
         //shotNode.fillColor = UIColor.redColor()
         shotNode.physicsBody = SKPhysicsBody(rectangleOfSize: shotSize)
         shotNode.physicsBody!.allowsRotation = false
@@ -294,11 +369,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         shotNode.physicsBody!.collisionBitMask = 0
         shotNode.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
         shotNode.name = "hook"
-        addChild(shotNode)
+        //addChild(shotNode)
         
-        let rope = SKSpriteNode(imageNamed:"rope")
-        rope.size.height = 50//self.view!.frame.height
-        rope.position.y = -rope.size.height
+        let rope = SKSpriteNode(texture: tiledRope)
+        rope.size.height = self.view!.frame.height - controlPanelHeight
+        rope.position.y = -rope.size.height/2
         rope.position.x = 0
         rope.physicsBody = SKPhysicsBody(rectangleOfSize: rope.size)
         rope.physicsBody!.allowsRotation = false
@@ -313,27 +388,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         rope.physicsBody!.collisionBitMask = 0
         rope.physicsBody!.contactTestBitMask = BallCategory
         rope.name = "rope"
-        shotNode.addChild(rope)
+        //shotNode.addChild(rope)
+        
+        /*let flip1 = SKAction.scaleXTo(1, duration: 0.0)
+        let wait = SKAction.waitForDuration(0.2)
+        let flip2 = SKAction.scaleXTo(-1, duration: 0.0)
+        let sequence = SKAction.sequence([flip1, wait, flip2])
+        shotNode.runAction(SKAction.repeatActionForever(sequence))*/
         
         /*physicsWorld.addJoint(SKPhysicsJointFixed.jointWithBodyA(shotNode.physicsBody!,
                        bodyB: rope.physicsBody!,
                        anchor: CGPointMake(shotNode.position.x, shotNode.position.y)))*/
-        
-        shotNode.physicsBody!.applyImpulse(CGVectorMake(0, 1.2))
-        
-/* 
- CGSize mergedSize = CGSizeMake(WIDTH_HERO, HEIGHT_HERO);
- UIGraphicsBeginImageContextWithOptions(mergedSize, NO, 0.0f);
- 
- [textureImage1 drawInRect:CGRectMake(0, 0, WIDTH_HERO, textureImage1.size.height)];
- [textureImage2 drawInRect:CGRectMake(0, 40, WIDTH_HERO, textureImage2.size.height)];
- [textureImage3 drawInRect:CGRectMake(0, 0, WIDTH_HERO, textureImage3.size.height)];
- 
- UIImage *mergedImage = UIGraphicsGetImageFromCurrentImageContext();
- UIGraphicsEndImageContext();
- 
- [self setTexture:[SKTexture textureWithImage:mergedImage]];
  */
+        
     }
     
     func isGameFinished() -> Bool {
@@ -383,6 +450,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let newscene = GameoverScene(size: view!.bounds.size)
         newscene.scaleMode = .AspectFit
 
+        self.scene?.removeAllChildren()
+        self.scene?.removeAllActions()
         self.scene!.view!.presentScene(newscene, transition: transition)
     }
     
@@ -394,11 +463,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let newscene = NextScene(size: view!.bounds.size)
         newscene.scaleMode = .AspectFit
         
+        self.scene?.removeAllChildren()
+        self.scene?.removeAllActions()
         self.scene!.view!.presentScene(newscene, transition: transition)
     }
     
     override func didSimulatePhysics() {
-        self.enumerateChildNodesWithName("hook", usingBlock: {
+        // put them in umbrella node called hooks
+        
+        self.enumerateChildNodesWithName("hook1", usingBlock: {
             (hookChild: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
 
             //let hookChild = self.childNodeWithName("hook")
@@ -407,7 +480,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 if(ropeChild != nil && hookChild != nil) {
                     let height = (ropeChild as! SKSpriteNode).size.height
-                    ropeChild!.position.y = -height
+                    
+                    ropeChild!.position.y = -height / 2
+                }
+            }
+        })
+        
+        self.enumerateChildNodesWithName("hook2", usingBlock: {
+            (hookChild: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
+            
+            //let hookChild = self.childNodeWithName("hook")
+            if(hookChild != nil) {
+                let ropeChild = hookChild!.childNodeWithName("rope")
+                
+                if(ropeChild != nil && hookChild != nil) {
+                    let height = (ropeChild as! SKSpriteNode).size.height
+                    
+                    ropeChild!.position.y = -height / 2
                 }
             }
         })
@@ -469,6 +558,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
 
+    deinit {
+        // perform the deinitialization
+        print("deinit was called")
+    }
     
    /*
     func convert(point: CGPoint)->CGPoint {
