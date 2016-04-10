@@ -16,7 +16,8 @@ let ObstacleCategory : UInt32 = 0x1 << 4
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //let backgroundMusic = SKAudioNode(fileNamed: "NewYork.mp3")
-    
+    let popSound = SKAudioNode(fileNamed: "blop.mp3")
+
     let swipeAreaName = "swipe"
     let buttonAreaName = "button"
     let ballName = "ball"
@@ -54,19 +55,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setTiledFillTexture(imageName: String, tileSize: CGSize, targetSize: CGSize) -> SKTexture {
-
-        let targetRef = UIImage(named: imageName)!.CGImage
-        
-        UIGraphicsBeginImageContext(targetSize)
-        let contextRef = UIGraphicsGetCurrentContext()
-        CGContextDrawTiledImage(contextRef, CGRect(origin: CGPointZero, size: tileSize), targetRef)
-        let tiledTexture = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return SKTexture(image: tiledTexture)
-    }
-    
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         
@@ -95,10 +83,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //backgroundMusic.autoplayLooped = true
         //addChild(backgroundMusic)
-        
-        
-        tiledRope = setTiledFillTexture("rope", tileSize: CGSize(width: 6, height: 32), targetSize: CGSize(width: 6, height: self.frame.height-controlPanelHeight))
-        
+        popSound.autoplayLooped = false
+        addChild(popSound)
+
         /*
          CGSize mergedSize = CGSizeMake(WIDTH_HERO, HEIGHT_HERO);
          UIGraphicsBeginImageContextWithOptions(mergedSize, NO, 0.0f);
@@ -266,14 +253,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             firstBody = contact.bodyB
             secondBody = contact.bodyA
         }
-        
 
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == HookCategory {
             
             if(firstBody.node != nil) {
-                if((firstBody.node?.xScale)! > 0.9) {
-                createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(5, 0))
-                createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(-5, 0))
+                let currentBall = firstBody.node as? Ball
+
+                if(currentBall!.sizeOfBall != Ball.ballSizes.mini) {
+                    let leftBall = Ball.divide(currentBall!)
+                    leftBall.position = CGPoint(x: currentBall!.position.x-10, y: currentBall!.position.y)
+                    addChild(leftBall)
+                    leftBall.physicsBody!.applyImpulse(CGVectorMake(-Ball.getPushVelocity(leftBall.sizeOfBall), 0))
+                    
+                    let rightBall = Ball.divide(currentBall!)
+                    rightBall.position = CGPoint(x: currentBall!.position.x+10, y: currentBall!.position.y)
+                    addChild(rightBall)
+                    rightBall.physicsBody!.applyImpulse(CGVectorMake(Ball.getPushVelocity(rightBall.sizeOfBall), 0))
+                    
+                //createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(5, 0))
+                //createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(-5, 0))
                 }
             }
             
@@ -283,6 +281,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             } else {
                 secondBody.node?.removeFromParent()
             }
+            
+            //let sound = SKAudioNode(fileNamed: "blop.mp3")
+            //sound.autoplayLooped = false
+            //addChild(sound)
+            //sound.runAction(SKAction.play())
+            
+            //popSound.removeAllActions()
+            //popSound.runAction(SKAction.play())
         }
         
         if firstBody.categoryBitMask == HookCategory && secondBody.categoryBitMask == ObstacleCategory {
@@ -302,7 +308,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func createBall(ballposition: CGPoint, scale:CGFloat) -> SKSpriteNode {
+    /*func createBall(ballposition: CGPoint, scale:CGFloat) -> SKSpriteNode {
         let newballNode = SKSpriteNode(imageNamed:"ball")
         newballNode.xScale = scale
         newballNode.yScale = scale
@@ -323,7 +329,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(newballNode)
         return newballNode
-    }
+    }*/
     
     func createShot() {
         
@@ -432,11 +438,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesNode.text = "\(lives) Lifes"
         addChild(livesNode)
         
-        let ballNode = createBall(CGPoint(x:self.frame.size.width/2+50, y:self.frame.size.height/2+100), scale: 2.0)
-        ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
+        let firstBall = Ball(ballName: "ball", ballSize: Ball.ballSizes.large)
+        firstBall.setBallColor(UIColor.redColor())
+        firstBall.position = CGPoint(x:self.frame.size.width/2+50, y:self.frame.size.height/2+100)
+        addChild(firstBall)
+        firstBall.physicsBody!.applyImpulse(CGVectorMake(Ball.getPushVelocity(firstBall.sizeOfBall), 0))
         
-        let ballNode2 = createBall(CGPoint(x:self.frame.size.width/2-50, y:self.frame.size.height/2+100), scale: 2.0)
-        ballNode2.physicsBody!.applyImpulse(CGVectorMake(-5, 0))
+        /*let secondBall = Ball(ballName: "ball", ballSize: Ball.ballSizes.large)
+        secondBall.setBallColor(UIColor.blueColor())
+        secondBall.position = CGPoint(x:self.frame.size.width/2-50, y:self.frame.size.height/2+100)
+        addChild(secondBall)
+        secondBall.physicsBody!.applyImpulse(CGVectorMake(-5, 0))*/
+        
+        //let ballNode = createBall(CGPoint(x:self.frame.size.width/2+50, y:self.frame.size.height/2+100), scale: 2.0)
+        //ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
+        
+        //let ballNode2 = createBall(CGPoint(x:self.frame.size.width/2-50, y:self.frame.size.height/2+100), scale: 2.0)
+        //ballNode2.physicsBody!.applyImpulse(CGVectorMake(-5, 0))
         
         startCountdown = true
         gameRunning = true
@@ -508,8 +526,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             beginNextLevel()
         }
         
-        let maxSpeed: CGFloat = 700.0
-        let hyperSpeed: CGFloat = 1000.0
+        let maxSpeed: CGFloat = 600.0
+        let hyperSpeed: CGFloat = 900.0
         
         // game countdown
         if(startCountdown) {
