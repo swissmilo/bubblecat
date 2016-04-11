@@ -51,6 +51,30 @@ class Ball : SKSpriteNode
         self.colorBlendFactor = 1.0
     }
     
+    func checkBounce() {
+        
+        // TODO: Check bounce height and x-velocity to be constant per ball type
+        
+        let maxSpeed: CGFloat = 600.0
+        let hyperSpeed: CGFloat = 900.0
+        
+        let speed = sqrt(physicsBody!.velocity.dx * physicsBody!.velocity.dx + physicsBody!.velocity.dy * physicsBody!.velocity.dy)
+        
+        if speed > hyperSpeed {
+            //print(speed)
+            physicsBody!.velocity.dx /= 2
+            physicsBody!.velocity.dx /= 2
+        }
+        
+        if speed > maxSpeed {
+            //print(speed)
+            physicsBody!.linearDamping = 0.4
+        }
+        else {
+            physicsBody!.linearDamping = 0.0
+        }
+    }
+    
     static func divide(ball: Ball) -> Ball {
         assert(ball.sizeOfBall != ballSizes.mini)
         let newBall = Ball(ballName: ball.name!, ballSize: ballSizes(rawValue: ball.sizeOfBall.rawValue - 1)!)
@@ -69,14 +93,16 @@ class Ball : SKSpriteNode
     
     static func getSize(ballSize:ballSizes) -> CGSize {
         switch ballSize {
-            case ballSizes.mini: return CGSize(width: 10,height: 10)
-            case ballSizes.small: return CGSize(width: 20,height: 20)
+            case ballSizes.mini: return CGSize(width: 15,height: 15)
+            case ballSizes.small: return CGSize(width: 25,height: 25)
             case ballSizes.medium: return CGSize(width: 45,height: 45)
             case ballSizes.large: return CGSize(width: 60,height: 60)
         }
     }
     
     required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        sizeOfBall = Ball.ballSizes.mini
+        super.init(coder: aDecoder)!
+        //fatalError("init(coder:) has not been implemented")
     }
 }

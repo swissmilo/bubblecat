@@ -9,6 +9,24 @@
 import UIKit
 import SpriteKit
 
+extension SKNode {
+    
+    class func unarchiveFromFile(file : String) -> SKNode? {
+        if let path = NSBundle.mainBundle().pathForResource(file, ofType: "sks") {
+            let sceneData = try! NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe)
+            let archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
+            
+            archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
+            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! GameScene
+            archiver.finishDecoding()
+            return scene
+        } else {
+            return nil
+        }
+    }
+    
+}
+
 class GameViewController: UIViewController {
 
     override func viewDidLoad() {
@@ -21,9 +39,12 @@ class GameViewController: UIViewController {
             
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
-            
+        
+        let scene = GameScene.unarchiveFromFile("Level1") as! GameScene
+        //let scene = GameScene(fileNamed: "Level1.sks")!
+        
         /* Set the scale mode to scale to fit the window */
-        let scene = GameScene(size: view.bounds.size)
+        //let scene = GameScene(size: view.bounds.size)
         scene.scaleMode = .AspectFit
         
         print("width " + String(view.bounds.size.width))

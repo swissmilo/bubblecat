@@ -52,7 +52,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+        //fatalError("init(coder:) has not been implemented")
     }
     
     override func didMoveToView(view: SKView) {
@@ -65,7 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.gravity = CGVectorMake(0.0, -7);
         physicsWorld.speed = 1
         
-        backgroundColor = UIColor.whiteColor()
+        //backgroundColor = UIColor.whiteColor()
         
         controlPanelHeight = 70
         controlPanelWidth = self.frame.width * 0.85
@@ -151,6 +152,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         actorNode.physicsBody!.collisionBitMask = ObstacleCategory
         actorNode.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
         addChild(actorNode)
+        
+        // replace spawn point from Level scene with brick
+        let spawnPoint = childNodeWithName("brick1") as! SKSpriteNode
+        let replaceBrick = Brick(brickName: "brick", brickSize: spawnPoint.size, destructable: true)
+        replaceBrick.position = spawnPoint.position
+        replaceBrick.zRotation = spawnPoint.zRotation
+        replaceBrick.setBrickColor(spawnPoint.color)
+        addChild(replaceBrick)
+        spawnPoint.removeFromParent()
+        
+        let oneBrick = Brick(brickName: "brick", brickSize: CGSize(width: 100, height:30), destructable: true)
+        oneBrick.position = CGPoint(x:self.frame.size.width/2+50, y:self.frame.size.height/2)
+        oneBrick.zRotation = CGFloat(M_PI_4)*2;
+        addChild(oneBrick)
         
         hooks.append(Hook(hookName: "hook1", ladderHeight: self.view!.frame.height - controlPanelHeight))
         hooks.append(Hook(hookName: "hook2", ladderHeight: self.view!.frame.height - controlPanelHeight))
@@ -292,6 +307,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if firstBody.categoryBitMask == HookCategory && secondBody.categoryBitMask == ObstacleCategory {
+            
+            if secondBody.node is Brick {
+                let brick = secondBody.node as! Brick
+                if(brick.isDestructable) {
+                    brick.destroy()
+                }
+            }
             
             print("hook ends")
             firstBody.node?.removeAllActions()
@@ -526,8 +548,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             beginNextLevel()
         }
         
-        let maxSpeed: CGFloat = 600.0
-        let hyperSpeed: CGFloat = 900.0
+        //let maxSpeed: CGFloat = 600.0
+        //let hyperSpeed: CGFloat = 900.0
         
         // game countdown
         if(startCountdown) {
@@ -556,7 +578,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.enumerateChildNodesWithName(ballName, usingBlock: {
             (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
 
-            let speed = sqrt(ball.physicsBody!.velocity.dx * ball.physicsBody!.velocity.dx + ball.physicsBody!.velocity.dy * ball.physicsBody!.velocity.dy)
+            (ball as! Ball).checkBounce()
+            /*let speed = sqrt(ball.physicsBody!.velocity.dx * ball.physicsBody!.velocity.dx + ball.physicsBody!.velocity.dy * ball.physicsBody!.velocity.dy)
             
             if speed > hyperSpeed {
                 //print(speed)
@@ -570,7 +593,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             else {
                 ball.physicsBody!.linearDamping = 0.0
-            }
+            }*/
             
         })
         
