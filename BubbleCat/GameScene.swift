@@ -60,7 +60,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         super.didMoveToView(view)
         
         //view.showsPhysics = true
-        
+        self.scene!.view!.paused = true
         physicsWorld.contactDelegate = self
         
         physicsWorld.gravity = CGVectorMake(0.0, -7);
@@ -153,22 +153,54 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         actorNode.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
         addChild(actorNode)
         
-        // replace spawn point from Level scene with brick
-        let spawnPoint = childNodeWithName("brick1") as! SKSpriteNode
-        let replaceBrick = Brick(brickName: "brick", brickSize: spawnPoint.size, destructable: true)
-        replaceBrick.position = spawnPoint.position
-        replaceBrick.zRotation = spawnPoint.zRotation
-        replaceBrick.setBrickColor(spawnPoint.color)
-        addChild(replaceBrick)
-        spawnPoint.removeFromParent()
+        //let spawnPoint = childNodeWithName("brick1") as! SKSpriteNode
         
-        let oneBrick = Brick(brickName: "brick", brickSize: CGSize(width: 100, height:30), destructable: true)
+        // replace spawn points from Level scene with brick
+        levelLoader()
+        
+        /*let oneBrick = Brick(brickName: "brick", brickSize: CGSize(width: 100, height:30), destructable: true)
         oneBrick.position = CGPoint(x:self.frame.size.width/2+50, y:self.frame.size.height/2)
         oneBrick.zRotation = CGFloat(M_PI_4)*2;
-        addChild(oneBrick)
+        addChild(oneBrick)*/
         
         hooks.append(Hook(hookName: "hook1", ladderHeight: self.view!.frame.height - controlPanelHeight))
         hooks.append(Hook(hookName: "hook2", ladderHeight: self.view!.frame.height - controlPanelHeight))
+    }
+    
+    func levelLoader() {
+        enumerateChildNodesWithName("//brick[0-9]*") {
+            node, stop in
+            let spawnPoint = node as! SKSpriteNode
+            // use z-level as flag for brick type: indestructable = 0, destructable = 1
+            let isDestructable = (spawnPoint.zPosition == 1 ? false : true)
+            let replaceBrick = Brick(brickName: "brick", brickSize: spawnPoint.size, destructable: isDestructable)
+            replaceBrick.position = spawnPoint.position
+            replaceBrick.zRotation = spawnPoint.zRotation
+            replaceBrick.setBrickColor(spawnPoint.color)
+            spawnPoint.parent!.addChild(replaceBrick)
+            spawnPoint.removeFromParent()
+        }
+        
+        enumerateChildNodesWithName("//ball[0-9]*") {
+            node, stop in
+            let spawnPoint = node as! SKSpriteNode
+            
+            // use 10,20,30,40 as placeholder for the 4 ball sizes
+            assert([10,20,30,40].contains(Int(spawnPoint.size.height)))
+            let replace = Ball(ballName: "ball", ballSize: Ball.ballSizes(rawValue: Int(spawnPoint.size.height)/10)!)
+            replace.position = spawnPoint.position
+            replace.setBallColor(spawnPoint.color)
+
+            spawnPoint.parent!.addChild(replace)
+            spawnPoint.removeFromParent()
+            
+            print(spawnPoint.physicsBody!.velocity.dx)
+            print(spawnPoint.physicsBody!.velocity.dy)
+            
+            
+            // use velocity set on physics body for setup
+            replace.physicsBody!.applyImpulse(spawnPoint.physicsBody!.velocity)
+        }
     }
     
     
@@ -373,7 +405,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // fire hook above actor
-        selectedHook.position = CGPoint(x: actorNode.position.x, y: actorNode.position.y+actorNode.size.height)
+        selectedHook.position = CGPoint(x: actorNode.position.x, y: actorNode.position.y)
         addChild(selectedHook)
         selectedHook.physicsBody!.applyImpulse(CGVectorMake(0, 1.2))
         
@@ -460,11 +492,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesNode.text = "\(lives) Lifes"
         addChild(livesNode)
         
-        let firstBall = Ball(ballName: "ball", ballSize: Ball.ballSizes.large)
+        /*let firstBall = Ball(ballName: "ball", ballSize: Ball.ballSizes.large)
         firstBall.setBallColor(UIColor.redColor())
         firstBall.position = CGPoint(x:self.frame.size.width/2+50, y:self.frame.size.height/2+100)
         addChild(firstBall)
-        firstBall.physicsBody!.applyImpulse(CGVectorMake(Ball.getPushVelocity(firstBall.sizeOfBall), 0))
+        firstBall.physicsBody!.applyImpulse(CGVectorMake(Ball.getPushVelocity(firstBall.sizeOfBall), 0))*/
         
         /*let secondBall = Ball(ballName: "ball", ballSize: Ball.ballSizes.large)
         secondBall.setBallColor(UIColor.blueColor())
@@ -480,6 +512,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         startCountdown = true
         gameRunning = true
+        self.scene!.view!.paused = false
     }
     
     func beginGameover() {

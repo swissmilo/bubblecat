@@ -24,7 +24,7 @@ class Ball : SKSpriteNode
     var sizeOfBall: ballSizes
     
     enum ballSizes : Int {
-        case mini = 0, small, medium, large
+        case mini = 1, small=2, medium=3, large=4
     }
     
     init(ballName:String, ballSize:ballSizes) {

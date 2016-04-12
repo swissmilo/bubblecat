@@ -41,7 +41,8 @@ class GameoverScene: SKScene {
         
         let transition = SKTransition.revealWithDirection(SKTransitionDirection.Down, duration: 1.0)
         
-        let newscene = GameScene(size: view!.bounds.size)
+        let newscene = GameScene.unarchiveFromFile("Level1") as! GameScene
+        //let newscene = GameScene(size: view!.bounds.size)
         newscene.scaleMode = .AspectFit
         
         self.scene!.view!.presentScene(newscene, transition: transition)
