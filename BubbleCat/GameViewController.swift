@@ -28,7 +28,7 @@ extension SKNode {
 }
 
 class GameViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,6 +49,7 @@ class GameViewController: UIViewController {
         
         print("width " + String(view.bounds.size.width))
         print("height " + String(view.bounds.size.height))
+        print(UIDevice.currentDevice().name)
         
         skView.presentScene(scene)
     }
@@ -67,6 +68,7 @@ class GameViewController: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        print("memory warning")
         // Release any cached data, images, etc that aren't in use.
     }
 

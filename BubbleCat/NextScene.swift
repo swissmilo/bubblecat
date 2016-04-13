@@ -39,6 +39,7 @@ class NextScene: SKScene {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         // Called when a touch begins
         
+        //self.scene!.view!.paused = false
         let transition = SKTransition.revealWithDirection(SKTransitionDirection.Down, duration: 1.0)
         
         let newscene = GameScene.unarchiveFromFile("Level1") as! GameScene

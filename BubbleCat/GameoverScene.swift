@@ -27,7 +27,7 @@ class GameoverScene: SKScene {
         backgroundColor = UIColor.blackColor()
         
         livesNode = SKLabelNode(fontNamed: "Futura-Medium")
-        livesNode.fontSize = 100;
+        livesNode.fontSize = 80;
         livesNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
         livesNode.fontColor = SKColor.whiteColor()
         livesNode.zPosition = 100;
@@ -39,6 +39,7 @@ class GameoverScene: SKScene {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         // Called when a touch begins
         
+        //self.scene!.view!.paused = false
         let transition = SKTransition.revealWithDirection(SKTransitionDirection.Down, duration: 1.0)
         
         let newscene = GameScene.unarchiveFromFile("Level1") as! GameScene

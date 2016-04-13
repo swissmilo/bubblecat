@@ -16,8 +16,13 @@ let ObstacleCategory : UInt32 = 0x1 << 4
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //let backgroundMusic = SKAudioNode(fileNamed: "NewYork.mp3")
-    let popSound = SKAudioNode(fileNamed: "blop.mp3")
+    static let popSound = SKAudioNode(fileNamed: "blop.mp3")
 
+    static let buttonImageName = "button"
+    static let buttonTex = SKTexture(imageNamed: GameScene.buttonImageName)
+    static let sliderImageName = "slider"
+    static let sliderTex = SKTexture(imageNamed: GameScene.sliderImageName)
+    
     let swipeAreaName = "swipe"
     let buttonAreaName = "button"
     let ballName = "ball"
@@ -26,11 +31,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var controlPanelHeight:CGFloat = 0
     var controlPanelWidth:CGFloat = 0
     
-    var swipeNode: SKShapeNode = SKShapeNode()
-    var buttonNode: SKShapeNode = SKShapeNode()
+    var backgroundNode: SKSpriteNode = SKSpriteNode()
+    var swipeNode: SKSpriteNode = SKSpriteNode()
+    var buttonNode: SKSpriteNode = SKSpriteNode()
     var actorNode: SKSpriteNode = SKSpriteNode()
     var countdownNode: SKLabelNode = SKLabelNode()
     var livesNode: SKLabelNode = SKLabelNode()
+    var gameNode: SKNode = SKNode()
     
     var walkFrames = [SKTexture]()
     var tiledRope = SKTexture()
@@ -59,15 +66,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         
+        print("init was called")
+        
         //view.showsPhysics = true
-        self.scene!.view!.paused = true
+        //self.scene!.view!.paused = true
         physicsWorld.contactDelegate = self
         
         physicsWorld.gravity = CGVectorMake(0.0, -7);
         physicsWorld.speed = 1
         
         //backgroundColor = UIColor.whiteColor()
-        
+        /*
         controlPanelHeight = 70
         controlPanelWidth = self.frame.width * 0.85
         
@@ -112,7 +121,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         swipeNode.name = swipeAreaName
         //print(panelSize)
         addChild(swipeNode)
-
         
         let buttonSize = CGSize(width:self.frame.size.width - controlPanelWidth,height:controlPanelHeight)
         buttonNode = SKShapeNode(rectOfSize: buttonSize)
@@ -124,7 +132,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         buttonNode.name = buttonAreaName
         //print(panelSize)
         addChild(buttonNode)
-  
+        */
+        
+        setupLayout()
         
         let actorAnimatedAtlas = SKTextureAtlas(named: "BearImages")
         
@@ -137,6 +147,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         actorNode = SKSpriteNode(texture: walkFrames[0])
         actorNode.size.width = 70
         actorNode.size.height = 50
+        actorNode.zPosition = 1
         actorNode.position = CGPoint(x:self.frame.size.width/2-200, y:controlPanelHeight + actorNode.size.height / 2)
 
         //actorNode.physicsBody = SKPhysicsBody(rectangleOfSize: actorNode.size)
@@ -167,7 +178,67 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         hooks.append(Hook(hookName: "hook2", ladderHeight: self.view!.frame.height - controlPanelHeight))
     }
     
+    func setupLayout() {
+        
+        let isWideScreen = view!.bounds.size.width / view!.bounds.size.height == 1.5 ? false : true
+
+        // For devices with 4:3 screen ratio (iPad and iPhone 4), increase control panel height to maintain the dimensions of the play area
+        controlPanelHeight = isWideScreen ? 70 : 70 + self.frame.height-self.frame.width/(667/375)
+        controlPanelWidth = self.frame.width - controlPanelHeight
+        
+        //print(controlPanelWidth)
+        //print(controlPanelHeight)
+        
+        //print(self.frame.width)
+        //print(view!.bounds.size.width)
+        
+        // the play area has inward physical boundaries for the ball to bounce off from
+        physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRect(x:self.frame.minX,y:self.frame.minY+controlPanelHeight,width:self.frame.maxX,height:self.frame.maxY-controlPanelHeight))
+        physicsBody!.friction = 0
+        physicsBody!.categoryBitMask = ObstacleCategory
+        
+        // set up node for the background texture
+        let backgroundSize = CGSize(width:self.frame.width,height:self.frame.height-controlPanelHeight)
+        backgroundNode = SKSpriteNode()
+        backgroundNode.size = backgroundSize
+        backgroundNode.position = CGPoint(x: self.frame.width/2,y: controlPanelHeight+(self.frame.height-controlPanelHeight)/2)
+        backgroundNode.zPosition = -1
+        backgroundNode.name = "background"
+        addChild(backgroundNode)
+    
+        // texture for the entire control panel area
+        let controlSize = CGSize(width:self.frame.width,height:controlPanelHeight)
+        let controlNode = SKSpriteNode(texture: GameScene.sliderTex, size: controlSize)
+        controlNode.position = CGPoint(x: controlSize.width/2,y: controlSize.height/2)
+        controlNode.zPosition = 99
+        addChild(controlNode)
+        
+        // slider itself has no texture, just a physics body to capture touch events
+        let panelSize = CGSize(width:controlPanelWidth,height:controlPanelHeight)
+        swipeNode = SKSpriteNode()
+        swipeNode.size = panelSize
+        swipeNode.position = CGPoint(x: panelSize.width/2,y: panelSize.height/2)
+        swipeNode.zPosition = 100
+        swipeNode.physicsBody = SKPhysicsBody(rectangleOfSize: panelSize)
+        swipeNode.physicsBody!.dynamic = false
+        swipeNode.name = swipeAreaName
+        addChild(swipeNode)
+    
+        let buttonSize = CGSize(width:controlPanelHeight,height:controlPanelHeight)
+        buttonNode = SKSpriteNode(texture: GameScene.buttonTex, size: buttonSize)
+        buttonNode.position = CGPoint(x: controlPanelWidth + buttonSize.width/2,y: buttonSize.height/2)
+        buttonNode.zPosition = 100
+        buttonNode.physicsBody = SKPhysicsBody(rectangleOfSize: buttonSize)
+        buttonNode.physicsBody!.dynamic = false
+        buttonNode.name = buttonAreaName
+        addChild(buttonNode)
+    }
+    
     func levelLoader() {
+        let backgroudTex = SKTexture(imageNamed: "level1")
+        backgroundNode.texture = backgroudTex
+        
+        // search and replace nodes from the spritescene file that start with brick
         enumerateChildNodesWithName("//brick[0-9]*") {
             node, stop in
             let spawnPoint = node as! SKSpriteNode
@@ -181,6 +252,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             spawnPoint.removeFromParent()
         }
         
+        // seach and replace ball nodes
         enumerateChildNodesWithName("//ball[0-9]*") {
             node, stop in
             let spawnPoint = node as! SKSpriteNode
@@ -193,10 +265,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             spawnPoint.parent!.addChild(replace)
             spawnPoint.removeFromParent()
-            
-            print(spawnPoint.physicsBody!.velocity.dx)
-            print(spawnPoint.physicsBody!.velocity.dy)
-            
             
             // use velocity set on physics body for setup
             replace.physicsBody!.applyImpulse(spawnPoint.physicsBody!.velocity)
@@ -226,6 +294,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
        // Called when a touch begins
+        
+        //if(self.scene!.view!.paused == true) {
+        //    self.scene!.view!.paused = false
+        //}
         
         if(gameRunning == false) {
             beginGame()
@@ -478,7 +550,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         countdownNode = SKLabelNode(fontNamed: "Futura-Medium")
         countdownNode.fontSize = 50;
         countdownNode.position = CGPointMake(CGRectGetMidX(self.frame)-100, CGRectGetMaxY(self.frame)*0.85)
-        countdownNode.fontColor = SKColor.blackColor()
+        countdownNode.fontColor = SKColor.whiteColor()
         countdownNode.name = "countDown";
         countdownNode.zPosition = 100;
         addChild(countdownNode)
@@ -486,7 +558,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesNode = SKLabelNode(fontNamed: "Futura-Medium")
         livesNode.fontSize = 50;
         livesNode.position = CGPointMake(CGRectGetMidX(self.frame)+100, CGRectGetMaxY(self.frame)*0.85)
-        livesNode.fontColor = SKColor.blackColor()
+        livesNode.fontColor = SKColor.whiteColor()
         livesNode.name = "lives";
         livesNode.zPosition = 100;
         livesNode.text = "\(lives) Lifes"
@@ -512,7 +584,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         startCountdown = true
         gameRunning = true
-        self.scene!.view!.paused = false
+        //self.scene!.view!.paused = false
     }
     
     func beginGameover() {
