@@ -37,7 +37,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var actorNode: SKSpriteNode = SKSpriteNode()
     var countdownNode: SKLabelNode = SKLabelNode()
     var livesNode: SKLabelNode = SKLabelNode()
+    
     var gameNode: SKNode = SKNode()
+    var layoutNode: SKNode = SKNode()
     
     var walkFrames = [SKTexture]()
     var tiledRope = SKTexture()
@@ -134,6 +136,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(buttonNode)
         */
         
+        addChild(gameNode)
+        addChild(layoutNode)
+        
         setupLayout()
         
         let actorAnimatedAtlas = SKTextureAtlas(named: "BearImages")
@@ -162,7 +167,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         actorNode.physicsBody!.categoryBitMask = ActorCategory
         actorNode.physicsBody!.collisionBitMask = ObstacleCategory
         actorNode.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
-        addChild(actorNode)
+        gameNode.addChild(actorNode)
         
         //let spawnPoint = childNodeWithName("brick1") as! SKSpriteNode
         
@@ -174,6 +179,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         oneBrick.zRotation = CGFloat(M_PI_4)*2;
         addChild(oneBrick)*/
         
+        // TODO should be based on playarea height
         hooks.append(Hook(hookName: "hook1", ladderHeight: self.view!.frame.height - controlPanelHeight))
         hooks.append(Hook(hookName: "hook2", ladderHeight: self.view!.frame.height - controlPanelHeight))
     }
@@ -204,14 +210,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundNode.position = CGPoint(x: self.frame.width/2,y: controlPanelHeight+(self.frame.height-controlPanelHeight)/2)
         backgroundNode.zPosition = -1
         backgroundNode.name = "background"
-        addChild(backgroundNode)
+        layoutNode.addChild(backgroundNode)
     
         // texture for the entire control panel area
         let controlSize = CGSize(width:self.frame.width,height:controlPanelHeight)
         let controlNode = SKSpriteNode(texture: GameScene.sliderTex, size: controlSize)
         controlNode.position = CGPoint(x: controlSize.width/2,y: controlSize.height/2)
         controlNode.zPosition = 99
-        addChild(controlNode)
+        layoutNode.addChild(controlNode)
         
         // slider itself has no texture, just a physics body to capture touch events
         let panelSize = CGSize(width:controlPanelWidth,height:controlPanelHeight)
@@ -222,7 +228,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         swipeNode.physicsBody = SKPhysicsBody(rectangleOfSize: panelSize)
         swipeNode.physicsBody!.dynamic = false
         swipeNode.name = swipeAreaName
-        addChild(swipeNode)
+        layoutNode.addChild(swipeNode)
     
         let buttonSize = CGSize(width:controlPanelHeight,height:controlPanelHeight)
         buttonNode = SKSpriteNode(texture: GameScene.buttonTex, size: buttonSize)
@@ -231,7 +237,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         buttonNode.physicsBody = SKPhysicsBody(rectangleOfSize: buttonSize)
         buttonNode.physicsBody!.dynamic = false
         buttonNode.name = buttonAreaName
-        addChild(buttonNode)
+        layoutNode.addChild(buttonNode)
     }
     
     func levelLoader() {
@@ -248,7 +254,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             replaceBrick.position = spawnPoint.position
             replaceBrick.zRotation = spawnPoint.zRotation
             replaceBrick.setBrickColor(spawnPoint.color)
-            spawnPoint.parent!.addChild(replaceBrick)
+            self.gameNode.addChild(replaceBrick)
             spawnPoint.removeFromParent()
         }
         
@@ -263,7 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             replace.position = spawnPoint.position
             replace.setBallColor(spawnPoint.color)
 
-            spawnPoint.parent!.addChild(replace)
+            self.gameNode.addChild(replace)
             spawnPoint.removeFromParent()
             
             // use velocity set on physics body for setup
@@ -312,6 +318,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 isFingerOnSwipe = true
             }
             else if body.node!.name == buttonAreaName {
+                
                 print("Button")
                 createShot()
             }
@@ -339,7 +346,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if isFingerOnSwipe {
 
                 if let body = physicsWorld.bodyAtPoint(touchLocation) {
-                    if body.node!.name == swipeAreaName {
+                    if body.node?.name == swipeAreaName {
                         
                         let previousLocation = touch.previousLocationInNode(self)
                         
@@ -381,12 +388,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 if(currentBall!.sizeOfBall != Ball.ballSizes.mini) {
                     let leftBall = Ball.divide(currentBall!)
                     leftBall.position = CGPoint(x: currentBall!.position.x-10, y: currentBall!.position.y)
-                    addChild(leftBall)
+                    gameNode.addChild(leftBall)
                     leftBall.physicsBody!.applyImpulse(CGVectorMake(-Ball.getPushVelocity(leftBall.sizeOfBall), 0))
                     
                     let rightBall = Ball.divide(currentBall!)
                     rightBall.position = CGPoint(x: currentBall!.position.x+10, y: currentBall!.position.y)
-                    addChild(rightBall)
+                    gameNode.addChild(rightBall)
                     rightBall.physicsBody!.applyImpulse(CGVectorMake(Ball.getPushVelocity(rightBall.sizeOfBall), 0))
                     
                 //createBall((firstBody.node?.position)!, scale: (firstBody.node?.xScale)! / 1.5).physicsBody!.applyImpulse(CGVectorMake(5, 0))
@@ -459,8 +466,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createShot() {
         
-        let hook1 = childNodeWithName("hook1")
-        let hook2 = childNodeWithName("hook2")
+        let hook1 = gameNode.childNodeWithName("hook1")
+        let hook2 = gameNode.childNodeWithName("hook2")
         
         // Can only shoot up to two hooks at once
         var selectedHook:Hook
@@ -478,7 +485,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // fire hook above actor
         selectedHook.position = CGPoint(x: actorNode.position.x, y: actorNode.position.y)
-        addChild(selectedHook)
+        gameNode.addChild(selectedHook)
         selectedHook.physicsBody!.applyImpulse(CGVectorMake(0, 1.2))
         
         // keep track of the two in move
@@ -536,7 +543,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func isGameFinished() -> Bool {
-        if (gameRunning && (self.childNodeWithName(ballName) == nil)) {
+        if (gameRunning && (gameNode.childNodeWithName(ballName) == nil)) {
             //let ballNode = createBall(CGPoint(x:self.frame.size.width/2, y:self.frame.size.height/2), scale: 1.0)
             //ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
             print("no more balls")
@@ -553,7 +560,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         countdownNode.fontColor = SKColor.whiteColor()
         countdownNode.name = "countDown";
         countdownNode.zPosition = 100;
-        addChild(countdownNode)
+        layoutNode.addChild(countdownNode)
         
         livesNode = SKLabelNode(fontNamed: "Futura-Medium")
         livesNode.fontSize = 50;
@@ -562,7 +569,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesNode.name = "lives";
         livesNode.zPosition = 100;
         livesNode.text = "\(lives) Lifes"
-        addChild(livesNode)
+        layoutNode.addChild(livesNode)
         
         /*let firstBall = Ball(ballName: "ball", ballSize: Ball.ballSizes.large)
         firstBall.setBallColor(UIColor.redColor())
@@ -616,7 +623,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didSimulatePhysics() {
         // put them in umbrella node called hooks
         
-        self.enumerateChildNodesWithName("hook1", usingBlock: {
+        gameNode.enumerateChildNodesWithName("hook[0-9]*", usingBlock: {
             (hookChild: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
 
             //let hookChild = self.childNodeWithName("hook")
@@ -630,7 +637,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
         })
-        
+        /*
         self.enumerateChildNodesWithName("hook2", usingBlock: {
             (hookChild: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
             
@@ -644,7 +651,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     ropeChild!.position.y = -height / 2
                 }
             }
-        })
+        })*/
     }
 
    
@@ -680,7 +687,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         //let ball = self.childNodeWithName(ballName) as! SKSpriteNode
-        self.enumerateChildNodesWithName(ballName, usingBlock: {
+        gameNode.enumerateChildNodesWithName(ballName, usingBlock: {
             (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
 
             (ball as! Ball).checkBounce()
