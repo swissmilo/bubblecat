@@ -24,7 +24,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     static let sliderImageName = "slider"
     static let sliderTex = SKTexture(imageNamed: GameScene.sliderImageName)
     
-    static var levelSelector = 1
+    static let firstLevel = 1
+    static var levelSelector = firstLevel
     
     let swipeAreaName = "swipe"
     let buttonAreaName = "button"
@@ -51,7 +52,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var startTime:CFTimeInterval = CFTimeInterval()
     
     var timeLimit = 100
-    var lives = 3
+    
+    static let startLifes = 3
+    static var lives = startLifes
     
     var hooks = [Hook]()
     
@@ -80,6 +83,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.gravity = CGVectorMake(0.0, -7);
         physicsWorld.speed = 1
  
+        // If was gameover, reset lifes
+        if(GameScene.lives <= 0) {
+            GameScene.lives = GameScene.startLifes
+        }
         
         addChild(gameNode)
         addChild(layoutNode)
@@ -164,7 +171,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesNode.fontColor = SKColor.whiteColor()
         livesNode.name = "lives";
         livesNode.zPosition = 100;
-        livesNode.text = "\(lives) Lifes"
+        livesNode.text = "\(GameScene.lives) Lifes"
         layoutNode.addChild(livesNode)
     }
     
@@ -331,9 +338,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ActorCategory {
             
-            lives -= 1
-            livesNode.text = "\(lives) Lifes"
-            if(lives <= 0) {
+            GameScene.lives -= 1
+            livesNode.text = "\(GameScene.lives) Lifes"
+            if(GameScene.lives <= 0) {
                 beginGameover()
             }
         }
@@ -375,7 +382,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func beginGame() {
-
+        
         startCountdown = true
         gameRunning = true
     }
