@@ -35,10 +35,9 @@ class Hook : SKSpriteNode
         self.physicsBody!.contactTestBitMask = BallCategory | ObstacleCategory
         self.name = hookName
         
-        let ropeTex = SKTexture(imageNamed: Hook.ropeImageName)
-        
         if(Hook.tiledRope == nil) {
-        Hook.tiledRope = Hook.setTiledFillTexture(Hook.ropeImageName, tileSize: CGSize(width: ropeTex.size().width, height: ropeTex.size().height), targetSize: CGSize(width: ropeTex.size().width, height: ladderHeight))
+            let ropeTex = SKTexture(imageNamed: Hook.ropeImageName)
+            Hook.tiledRope = Hook.setTiledFillTexture(Hook.ropeImageName, tileSize: CGSize(width: ropeTex.size().width, height: ropeTex.size().height), targetSize: CGSize(width: ropeTex.size().width, height: ladderHeight))
         }
         
         ropeNode = SKSpriteNode(texture: Hook.tiledRope)
@@ -63,6 +62,7 @@ class Hook : SKSpriteNode
     
     static func setTiledFillTexture(imageName: String, tileSize: CGSize, targetSize: CGSize) -> SKTexture {
         
+        // render a tiled texture for the rope
         let targetRef = UIImage(named: imageName)!.CGImage
         
         UIGraphicsBeginImageContext(targetSize)

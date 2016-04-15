@@ -42,10 +42,12 @@ class NextScene: SKScene {
         //self.scene!.view!.paused = false
         let transition = SKTransition.revealWithDirection(SKTransitionDirection.Down, duration: 1.0)
         
-        let newscene = GameScene.unarchiveFromFile("Level1") as! GameScene
+        GameScene.levelSelector += 1
+        let newscene = GameScene.unarchiveFromFile("Level\(GameScene.levelSelector)") as? GameScene
         //let newscene = GameScene(size: view!.bounds.size)
-        newscene.scaleMode = .AspectFit
-        
-        self.scene!.view!.presentScene(newscene, transition: transition)
+        if(newscene != nil) {
+            newscene!.scaleMode = .AspectFit
+            self.scene!.view!.presentScene(newscene!, transition: transition)
+        }
     }
 }

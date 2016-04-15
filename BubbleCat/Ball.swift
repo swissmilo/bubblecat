@@ -6,13 +6,6 @@
 //  Copyright © 2016 Milo Spirig. All rights reserved.
 //
 
-//
-//  Hook.swift
-//  BubbleCat
-//
-//  Created by Milo Spirig on 4/9/16.
-//  Copyright © 2016 Milo Spirig. All rights reserved.
-//
 
 import Foundation
 import SpriteKit
@@ -55,8 +48,8 @@ class Ball : SKSpriteNode
         
         // TODO: Check bounce height and x-velocity to be constant per ball type
         
-        let maxSpeed: CGFloat = 600.0
-        let hyperSpeed: CGFloat = 900.0
+        let maxSpeed: CGFloat = 700.0
+        let hyperSpeed: CGFloat = 1000.0
         
         let speed = sqrt(physicsBody!.velocity.dx * physicsBody!.velocity.dx + physicsBody!.velocity.dy * physicsBody!.velocity.dy)
         

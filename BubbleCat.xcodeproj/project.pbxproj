@@ -23,6 +23,8 @@
 		26B7D90C1CB7812F006885F0 /* NextScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B7D90B1CB7812F006885F0 /* NextScene.swift */; };
 		26C037BB1CB4CE3D002F58AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C037B91CB4CE3D002F58AE /* Main.storyboard */; };
 		26C037BE1CB4CF68002F58AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C037BC1CB4CF68002F58AE /* LaunchScreen.storyboard */; };
+		26CFFC641CC166D00083C8B9 /* Level2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 26CFFC631CC166D00083C8B9 /* Level2.sks */; };
+		26CFFC661CC16BB40083C8B9 /* Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFFC651CC16BB40083C8B9 /* Actor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,8 @@
 		26B7D90B1CB7812F006885F0 /* NextScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NextScene.swift; sourceTree = "<group>"; };
 		26C037BA1CB4CE3D002F58AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		26C037BD1CB4CF68002F58AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		26CFFC631CC166D00083C8B9 /* Level2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level2.sks; sourceTree = "<group>"; };
+		26CFFC651CC16BB40083C8B9 /* Actor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +133,9 @@
 				263AD0C91CB9B2F00056EF9D /* Hook.swift */,
 				263AD0CD1CB9CFCD0056EF9D /* Ball.swift */,
 				263AD0CF1CBAC77E0056EF9D /* Brick.swift */,
+				26CFFC631CC166D00083C8B9 /* Level2.sks */,
 				263AD0D11CBB4AF40056EF9D /* Level1.sks */,
+				26CFFC651CC16BB40083C8B9 /* Actor.swift */,
 			);
 			path = BubbleCat;
 			sourceTree = "<group>";
@@ -262,6 +268,7 @@
 				263AD0D21CBB4AF40056EF9D /* Level1.sks in Resources */,
 				262025C31CB36A1E00BD637E /* Assets.xcassets in Resources */,
 				26C037BB1CB4CE3D002F58AE /* Main.storyboard in Resources */,
+				26CFFC641CC166D00083C8B9 /* Level2.sks in Resources */,
 				26B7D9081CB76686006885F0 /* BearImages.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -293,6 +300,7 @@
 				262025BE1CB36A1E00BD637E /* GameViewController.swift in Sources */,
 				26B7D90A1CB77D07006885F0 /* GameoverScene.swift in Sources */,
 				263AD0CA1CB9B2F00056EF9D /* Hook.swift in Sources */,
+				26CFFC661CC16BB40083C8B9 /* Actor.swift in Sources */,
 				263AD0CE1CB9CFCD0056EF9D /* Ball.swift in Sources */,
 				262025B81CB36A1E00BD637E /* AppDelegate.swift in Sources */,
 			);

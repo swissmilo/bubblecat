@@ -40,7 +40,7 @@ class GameViewController: UIViewController {
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
         
-        let scene = GameScene.unarchiveFromFile("Level1") as! GameScene
+        let scene = GameScene.unarchiveFromFile("Level\(GameScene.levelSelector)") as! GameScene
         //let scene = GameScene(fileNamed: "Level1.sks")!
         
         /* Set the scale mode to scale to fit the window */
