@@ -15,6 +15,7 @@ class Ball : SKSpriteNode
     static let ballImageName = "ball"
     static let ballTex = SKTexture(imageNamed: Ball.ballImageName)
     var sizeOfBall: ballSizes
+    var lastVelocityX: CGFloat = 10
     
     enum ballSizes : Int {
         case mini = 1, small=2, medium=3, large=4
@@ -36,7 +37,7 @@ class Ball : SKSpriteNode
         
         self.physicsBody!.categoryBitMask = BallCategory
         self.physicsBody!.collisionBitMask = ActorCategory | HookCategory | ObstacleCategory
-        self.physicsBody!.contactTestBitMask = ActorCategory | HookCategory
+        self.physicsBody!.contactTestBitMask = ActorCategory | HookCategory | ObstacleCategory
     }
     
     func setBallColor(color:UIColor) {

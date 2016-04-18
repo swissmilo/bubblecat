@@ -53,6 +53,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var timeLimit = 100
     
+    var lastVelocityX:CGFloat = 0
+    
     static let startLifes = 3
     static var lives = startLifes
     
@@ -119,6 +121,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // the play area has inward physical boundaries for the ball to bounce off from
         physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRect(x:self.frame.minX,y:self.frame.minY+controlPanelHeight,width:self.frame.maxX,height:self.frame.maxY-controlPanelHeight))
         physicsBody!.friction = 0
+        physicsBody!.restitution = 1.0
+        physicsBody!.linearDamping = 0
+        physicsBody!.angularDamping = 0
+        physicsBody!.affectedByGravity = false
         physicsBody!.categoryBitMask = ObstacleCategory
         
         // set up node for the background texture
@@ -207,6 +213,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.gameNode.addChild(replace)
             spawnPoint.removeFromParent()
             
+            // TODO change impulse to setting velocity?
+            
             // use velocity set on physics body for setup
             replace.physicsBody!.applyImpulse(spawnPoint.physicsBody!.velocity)
         }
@@ -282,6 +290,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var firstBody: SKPhysicsBody
         var secondBody: SKPhysicsBody
         
+        // categorize first and second body in order of the bit masks
         if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
             firstBody = contact.bodyA
             secondBody = contact.bodyB
@@ -289,12 +298,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             firstBody = contact.bodyB
             secondBody = contact.bodyA
         }
+        
+        // the physics engine incorrectly rounds the x-velocity of the ball to zero if it hits an obstacle at a steep angle, to correct for this, we record the last x-velocity and substitute it whenever it gets set to 0
+        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ObstacleCategory {
+            
+            if(firstBody.node != nil) {
+                
+                //let speed = sqrt(firstBody.velocity.dx * firstBody.velocity.dx + firstBody.velocity.dy * firstBody.velocity.dy)
+                //print("Speed \(speed) and x is \(firstBody.velocity.dx)")
+                
+                let currentBall = firstBody.node as? Ball
+                
+                if(firstBody.velocity.dx == 0) {
+                    firstBody.velocity.dx = -currentBall!.lastVelocityX
+                }
+                else {
+                    currentBall!.lastVelocityX = firstBody.velocity.dx
+                }
+            }
+        }
 
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == HookCategory {
             
             if(firstBody.node != nil) {
                 let currentBall = firstBody.node as? Ball
 
+                // if hook hits a ball, subdivide into 2 unless it's the smallest size already
                 if(currentBall!.sizeOfBall != Ball.ballSizes.mini) {
                     let leftBall = Ball.divide(currentBall!)
                     leftBall.position = CGPoint(x: currentBall!.position.x-10, y: currentBall!.position.y)
@@ -308,6 +337,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
             
+            // after the hook hits a ball, remove it
             firstBody.node?.removeFromParent()
             if(secondBody.node?.parent?.physicsBody?.categoryBitMask == HookCategory) {
                 secondBody.node?.parent?.removeFromParent()
@@ -322,6 +352,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //popSound.runAction(SKAction.play())
         }
         
+        // if a hook hits a brick, remove it only if the brick is marked as destructable
         if firstBody.categoryBitMask == HookCategory && secondBody.categoryBitMask == ObstacleCategory {
             
             if secondBody.node is Brick {
@@ -336,6 +367,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             firstBody.node?.removeFromParent()
         }
         
+        // player loses one life every time they get hit by the ball
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ActorCategory {
             
             GameScene.lives -= 1
