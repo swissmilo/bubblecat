@@ -15,7 +15,7 @@ class Ball : SKSpriteNode
     static let ballImageName = "ball"
     static let ballTex = SKTexture(imageNamed: Ball.ballImageName)
     var sizeOfBall: ballSizes
-    var lastVelocityX: CGFloat = 10
+    var lastVelocityX: CGFloat = 0
     
     enum ballSizes : Int {
         case mini = 1, small=2, medium=3, large=4
@@ -49,8 +49,9 @@ class Ball : SKSpriteNode
         
         // TODO: Check bounce height and x-velocity to be constant per ball type
         
-        let maxSpeed: CGFloat = 700.0
-        let hyperSpeed: CGFloat = 1000.0
+        // if ball is going too fast because it hits a sharp corner, slow it down into an acceptable range
+        let maxSpeed: CGFloat = 500.0
+        let hyperSpeed: CGFloat = 800.0
         
         let speed = sqrt(physicsBody!.velocity.dx * physicsBody!.velocity.dx + physicsBody!.velocity.dy * physicsBody!.velocity.dy)
         
@@ -69,11 +70,24 @@ class Ball : SKSpriteNode
         }
     }
     
+    func checkGroundVelocity() {
+        physicsBody?.velocity.dy = getMinVelocityY()
+    }
+    
     static func divide(ball: Ball) -> Ball {
         assert(ball.sizeOfBall != ballSizes.mini)
         let newBall = Ball(ballName: ball.name!, ballSize: ballSizes(rawValue: ball.sizeOfBall.rawValue - 1)!)
         newBall.setBallColor(ball.color)
         return newBall
+    }
+    
+    func getMinVelocityY() -> CGFloat {
+        switch sizeOfBall {
+        case ballSizes.mini: return 380
+        case ballSizes.small: return 420
+        case ballSizes.medium: return 500
+        case ballSizes.large: return 600
+        }
     }
     
     static func getPushVelocity(ballSize:ballSizes) -> CGFloat {

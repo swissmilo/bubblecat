@@ -82,8 +82,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //self.scene!.view!.paused = true
         physicsWorld.contactDelegate = self
         
-        physicsWorld.gravity = CGVectorMake(0.0, -7);
-        physicsWorld.speed = 1
+        physicsWorld.gravity = CGVectorMake(0.0, -6);
+        physicsWorld.speed = 0.9
  
         // If was gameover, reset lifes
         if(GameScene.lives <= 0) {
@@ -306,8 +306,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 //let speed = sqrt(firstBody.velocity.dx * firstBody.velocity.dx + firstBody.velocity.dy * firstBody.velocity.dy)
                 //print("Speed \(speed) and x is \(firstBody.velocity.dx)")
+                //print("Speed \(speed) and y is \(firstBody.velocity.dy)")
                 
                 let currentBall = firstBody.node as? Ball
+                
+                // if the ball hits the ground also keep the Y-velocity constant (height of bounce)
+                if((secondBody.node as? SKScene) != nil) {
+                    currentBall!.checkGroundVelocity()
+                }
                 
                 if(firstBody.velocity.dx == 0) {
                     firstBody.velocity.dx = -currentBall!.lastVelocityX
