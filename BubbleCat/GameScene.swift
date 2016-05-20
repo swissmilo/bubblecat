@@ -407,11 +407,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func powerupLottery(point: CGPoint) {
         // 10% chance of spawning a powerup
-        //if(rand() % 10 == 0) {
+        if(rand() % 2 == 0) {
         
             // randomly pick one of the 6 available powerups
-            //let powerupType = PowerUp.powerupType(rawValue: Int(rand() % 5 + 1))!
-            let powerupType = PowerUp.powerupType.extraLife
+            //let powerupType = PowerUp.randomPowerUp()
+            let powerupType = PowerUp.powerupType.doubleHook
             let newPowerup = PowerUp(powerupName: "powerup", powerupSize: CGSize(width: 20,height: 20), type: powerupType)
             
             newPowerup.position = point
@@ -424,7 +424,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 newPowerup.removeFromParent()
             }
             newPowerup.runAction(SKAction.sequence([wait, run]))
-        //}
+        }
     }
     
     
@@ -434,6 +434,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case .extraLife:
             GameScene.lives += 1
             livesNode.text = "\(GameScene.lives) Lifes"
+        //case .shield:
+        //case .doubleHook: nothing else needed
+        //case .staticHook: time limit
+        //case .timeStop: time limit
         case .dynamite:
             gameNode.enumerateChildNodesWithName(ballName, usingBlock: {
                 (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
@@ -451,18 +455,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let hook1 = gameNode.childNodeWithName("hook1")
         let hook2 = gameNode.childNodeWithName("hook2")
         
-        // Can only shoot up to two hooks at once
         var selectedHook:Hook
-        if(hook1 == nil) {
-            selectedHook = hooks[0]
-        } else if(hook2 == nil) {
-            selectedHook = hooks[1]
+        
+        // Can shoot up to two hooks at once with power up
+        if(PowerUp.active == PowerUp.powerupType.doubleHook) {
+            if(hook1 == nil) {
+                selectedHook = hooks[0]
+            } else if(hook2 == nil) {
+                selectedHook = hooks[1]
+            }
+            else {
+                // If both hooks have been fired already, reset the first one fired
+                selectedHook = (hook1 as! Hook).position.y > (hook2 as! Hook).position.y ? (hook1 as! Hook) : (hook2 as! Hook)
+                selectedHook.removeAllActions()
+                selectedHook.removeFromParent()
+            }
         }
+        // Only one hook at a time without powerup
         else {
-            // If both hooks have been fired already, reset the first one fired
-            selectedHook = (hook1 as! Hook).position.y > (hook2 as! Hook).position.y ? (hook1 as! Hook) : (hook2 as! Hook)
-            selectedHook.removeAllActions()
-            selectedHook.removeFromParent()
+            selectedHook = hooks[0]
+            if(hook1 != nil) {
+                selectedHook.removeAllActions()
+                selectedHook.removeFromParent()
+            }
         }
         
         // fire hook above actor

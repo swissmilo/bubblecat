@@ -20,7 +20,7 @@ import SpriteKit
 class PowerUp : SKSpriteNode
 {
     enum powerupType : Int {
-        case none=0, extraLife = 1, invincible=2, staticHook=3, doubleHook=4, timeStop=5, dynamite=6
+        case none=0, extraLife = 1, shield=2, staticHook=3, doubleHook=4, timeStop=5, dynamite=6
     }
     
     static let showTime:Double = 4
@@ -44,6 +44,8 @@ class PowerUp : SKSpriteNode
         self.name = powerupName
         self.zPosition = 2
         
+        // give powerup less gravity and should not bounce
+        
         self.physicsBody = SKPhysicsBody(rectangleOfSize: powerupSize)
         self.physicsBody!.allowsRotation = false
         self.physicsBody!.friction = 0
@@ -62,6 +64,27 @@ class PowerUp : SKSpriteNode
     
     func deactivate() {
         PowerUp.active = powerupType.none
+    }
+    
+    // choose a random powerup with some probabilities
+    static func randomPowerUp() -> powerupType {
+        switch (rand() % 100) {
+        case 0..<10:
+            return powerupType.extraLife
+        case 10..<25:
+            return powerupType.shield
+        case 25..<55:
+            return powerupType.staticHook
+        case 55..<85:
+            return powerupType.doubleHook
+        case 85..<94:
+            return powerupType.timeStop
+        case 94..<100:
+            return powerupType.dynamite
+        default:
+            assertionFailure()
+            return powerupType.none
+        }
     }
     
     required init(coder aDecoder: NSCoder) {
