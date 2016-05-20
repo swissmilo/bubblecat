@@ -12,7 +12,7 @@ let BallCategory   : UInt32 = 0x1 << 1
 let HookCategory : UInt32 = 0x1 << 2
 let ActorCategory  : UInt32 = 0x1 << 3
 let ObstacleCategory : UInt32 = 0x1 << 4
-let ItemCategory : UInt32 = 0x1 << 5
+let PowerupCategory : UInt32 = 0x1 << 5
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -179,6 +179,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesNode.zPosition = 100;
         livesNode.text = "\(GameScene.lives) Lifes"
         layoutNode.addChild(livesNode)
+        
+        //print("panel height is \(controlPanelHeight)")
     }
     
     func levelLoader() {
@@ -312,7 +314,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 // if the ball hits the ground also keep the Y-velocity constant (height of bounce)
                 if((secondBody.node as? SKScene) != nil) {
-                    currentBall!.checkGroundVelocity()
+                    if(currentBall!.position.y <= self.view!.frame.height/2) {
+                        currentBall?.checkGroundVelocity()
+                    }
                 }
                 
                 if(firstBody.velocity.dx == 0) {
@@ -323,14 +327,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
         }
-
+        
+        // Actor picks up powerup
+        if firstBody.categoryBitMask == ActorCategory && secondBody.categoryBitMask == PowerupCategory {
+            
+            if(secondBody.node != nil) {
+                let powerupNode = secondBody.node as? PowerUp
+                powerupNode?.activate()
+                activatePowerup()
+                
+                powerupNode?.removeAllActions()
+                powerupNode?.removeFromParent()
+            }
+        }
+        
+        // Ball gets hit by hook
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == HookCategory {
             
             if(firstBody.node != nil) {
                 let currentBall = firstBody.node as? Ball
 
+                powerupLottery(currentBall!.position)
+                
                 // if hook hits a ball, subdivide into 2 unless it's the smallest size already
-                if(currentBall!.sizeOfBall != Ball.ballSizes.mini) {
+                if(currentBall!.sizeOfBall != Ball.ballSizes.small && currentBall!.sizeOfBall != Ball.ballSizes.mini) {
+                    
                     let leftBall = Ball.divide(currentBall!)
                     leftBall.position = CGPoint(x: currentBall!.position.x-10, y: currentBall!.position.y)
                     gameNode.addChild(leftBall)
@@ -381,6 +402,47 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(GameScene.lives <= 0) {
                 beginGameover()
             }
+        }
+    }
+    
+    func powerupLottery(point: CGPoint) {
+        // 10% chance of spawning a powerup
+        //if(rand() % 10 == 0) {
+        
+            // randomly pick one of the 6 available powerups
+            //let powerupType = PowerUp.powerupType(rawValue: Int(rand() % 5 + 1))!
+            let powerupType = PowerUp.powerupType.extraLife
+            let newPowerup = PowerUp(powerupName: "powerup", powerupSize: CGSize(width: 20,height: 20), type: powerupType)
+            
+            newPowerup.position = point
+            gameNode.addChild(newPowerup)
+        
+            // only show powerup for 4 seconds
+            let wait = SKAction.waitForDuration(PowerUp.showTime)
+            let run = SKAction.runBlock {
+                newPowerup.removeAllActions()
+                newPowerup.removeFromParent()
+            }
+            newPowerup.runAction(SKAction.sequence([wait, run]))
+        //}
+    }
+    
+    
+    func activatePowerup() {
+        
+        switch(PowerUp.active) {
+        case .extraLife:
+            GameScene.lives += 1
+            livesNode.text = "\(GameScene.lives) Lifes"
+        case .dynamite:
+            gameNode.enumerateChildNodesWithName(ballName, usingBlock: {
+                (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
+                
+                (ball as! Ball).sizeOfBall = Ball.ballSizes.small
+                (ball as! Ball).size = Ball.getSize(Ball.ballSizes.small)
+            })
+         default: break
+            
         }
     }
     
