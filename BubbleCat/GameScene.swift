@@ -44,6 +44,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var gameNode: SKNode = SKNode()
     var layoutNode: SKNode = SKNode()
+    let shieldNode = SKNode()
 
     var actorWalkingDirectionMultiplier : CGFloat = 1
     
@@ -101,13 +102,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         actorNode.position = CGPoint(x:self.frame.size.width/2-200, y:controlPanelHeight + actorNode.size.height / 2)
         gameNode.addChild(actorNode)
+        gameNode.addChild(shieldNode)
 
         // replace spawn points from Level scene with bricks and balls
         levelLoader()
         
         // TODO should be based on playarea height
-        hooks.append(Hook(hookName: "hook1", ladderHeight: self.view!.frame.height - controlPanelHeight))
-        hooks.append(Hook(hookName: "hook2", ladderHeight: self.view!.frame.height - controlPanelHeight))
+        hooks.append(Hook(hookName: "hook1", ladderHeight: self.view!.frame.height))
+        hooks.append(Hook(hookName: "hook2", ladderHeight: self.view!.frame.height))
     }
     
     func setupLayout() {
@@ -366,9 +368,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             // after the hook hits a ball, remove it
             firstBody.node?.removeFromParent()
+            
             if(secondBody.node?.parent?.physicsBody?.categoryBitMask == HookCategory) {
+                secondBody.node?.parent?.removeAllActions()
                 secondBody.node?.parent?.removeFromParent()
             } else {
+                secondBody.node?.removeAllActions()
                 secondBody.node?.removeFromParent()
             }
             
@@ -386,45 +391,68 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let brick = secondBody.node as! Brick
                 if(brick.isDestructable) {
                     brick.destroy()
+                    firstBody.node?.removeAllActions()
+                    firstBody.node?.removeFromParent()
+                    return
                 }
             }
             
-            //print("hook ends")
-            firstBody.node?.removeAllActions()
-            firstBody.node?.removeFromParent()
+            // static hook can stick to ceiling or indestructable brick
+            if(PowerUp.active == PowerUp.powerupType.staticHook) {
+                firstBody.dynamic = false
+                
+                // reset ball velocities after time starts again
+                let wait = SKAction.waitForDuration(PowerUp.staticHookDuration)
+                let run = SKAction.runBlock {
+                    firstBody.node?.removeAllActions()
+                    firstBody.node?.removeFromParent()
+                }
+                firstBody.node?.runAction(SKAction.sequence([wait, run]))
+            }
+            else {
+                //print("hook ends")
+                firstBody.node?.removeAllActions()
+                firstBody.node?.removeFromParent()
+            }
         }
         
         // player loses one life every time they get hit by the ball
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ActorCategory {
             
-            GameScene.lives -= 1
-            livesNode.text = "\(GameScene.lives) Lifes"
-            if(GameScene.lives <= 0) {
-                beginGameover()
+            // can absorb one hit with shield powerup
+            if(PowerUp.shieldActive) {
+                actorNode.colorBlendFactor = 0
+                PowerUp.shieldActive = false
+            } else {
+                GameScene.lives -= 1
+                livesNode.text = "\(GameScene.lives) Lifes"
+                if(GameScene.lives <= 0) {
+                    beginGameover()
+                }
             }
         }
     }
     
     func powerupLottery(point: CGPoint) {
         // 10% chance of spawning a powerup
-        if(rand() % 2 == 0) {
+        //if(rand() % 10 == 0) {
         
             // randomly pick one of the 6 available powerups
-            //let powerupType = PowerUp.randomPowerUp()
-            let powerupType = PowerUp.powerupType.doubleHook
+            let powerupType = PowerUp.randomPowerUp()
+            //let powerupType = PowerUp.powerupType.shield
             let newPowerup = PowerUp(powerupName: "powerup", powerupSize: CGSize(width: 20,height: 20), type: powerupType)
             
             newPowerup.position = point
             gameNode.addChild(newPowerup)
         
-            // only show powerup for 4 seconds
+            // only show powerup for a limited number of seconds
             let wait = SKAction.waitForDuration(PowerUp.showTime)
             let run = SKAction.runBlock {
                 newPowerup.removeAllActions()
                 newPowerup.removeFromParent()
             }
             newPowerup.runAction(SKAction.sequence([wait, run]))
-        }
+        //}
     }
     
     
@@ -434,10 +462,51 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case .extraLife:
             GameScene.lives += 1
             livesNode.text = "\(GameScene.lives) Lifes"
-        //case .shield:
-        //case .doubleHook: nothing else needed
-        //case .staticHook: time limit
-        //case .timeStop: time limit
+        case .shield:
+            // create shader for actor
+            actorNode.color = UIColor.greenColor()
+            actorNode.colorBlendFactor = 1.0
+            PowerUp.shieldActive = true
+            
+            let wait = SKAction.waitForDuration(PowerUp.shieldDuration)
+            let run = SKAction.runBlock {
+                self.actorNode.colorBlendFactor = 0
+                PowerUp.shieldActive = false
+            }
+            // remove previous timer in case player already had a shield powerup active
+            shieldNode.removeAllActions()
+            shieldNode.runAction(SKAction.sequence([wait, run]))
+            
+            
+        case .timeStop:
+
+            var ballVelocities = [CGVector]()
+            
+            // stop all ball physics
+            gameNode.enumerateChildNodesWithName(ballName, usingBlock: {
+                (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
+                
+                ballVelocities.append(((ball as! Ball).physicsBody?.velocity)!)
+                
+                (ball as! Ball).physicsBody?.dynamic = false
+                
+            })
+            
+            // reset ball velocities after time starts again
+            let wait = SKAction.waitForDuration(PowerUp.timeStopDuration)
+            let run = SKAction.runBlock {
+                
+                self.gameNode.enumerateChildNodesWithName(self.ballName, usingBlock: {
+                    (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
+                    
+                    (ball as! Ball).physicsBody?.dynamic = true
+                    (ball as! Ball).physicsBody?.velocity = ballVelocities.removeFirst()
+                })
+                
+            }
+            gameNode.runAction(SKAction.sequence([wait, run]))
+            
+            
         case .dynamite:
             gameNode.enumerateChildNodesWithName(ballName, usingBlock: {
                 (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
@@ -481,6 +550,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // fire hook above actor
+        selectedHook.physicsBody?.dynamic = true
         selectedHook.position = CGPoint(x: actorNode.position.x, y: actorNode.position.y)
         gameNode.addChild(selectedHook)
         selectedHook.physicsBody!.applyImpulse(CGVectorMake(0, 1.2))

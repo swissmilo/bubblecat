@@ -24,8 +24,12 @@ class PowerUp : SKSpriteNode
     }
     
     static let showTime:Double = 4
+    static let timeStopDuration:Double = 3
+    static let staticHookDuration:Double = 6
+    static let shieldDuration:Double = 5
     static let powerupImageNames = "powerup_"
     static var powerupImages = [SKTexture]()
+    static var shieldActive = false
     
     static var active:powerupType = powerupType.none
     var powerupId:powerupType
