@@ -29,7 +29,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let swipeAreaName = "swipe"
     let buttonAreaName = "button"
-    let ballName = "ball"
+    let ballName = "gameball"
     var isFingerOnSwipe = false
     
     var controlPanelHeight:CGFloat = 0
@@ -53,7 +53,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var startTime:CFTimeInterval = CFTimeInterval()
     
     var timeLimit = 100
+    var pausedTimeDifference = 0
+    var lastUpdateTime:CFTimeInterval = CFTimeInterval()
     
+    var unpauseActions:Bool = false
+    var timeStopActiveCounter = 0
+    var ballNameCounter = 1
+    //var ballVelocities = [CGVector]()
     var lastVelocityX:CGFloat = 0
     
     static let startLifes = 3
@@ -76,6 +82,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
+        
+        // Used to pause and restart the game if the app is moving into the background
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(GameScene.pauseScene),
+                                                         name: UIApplicationWillResignActiveNotification,
+                                                         object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(GameScene.restartScene),
+                                                         name: UIApplicationDidBecomeActiveNotification,
+                                                         object: nil)
+
         
         print("init was called")
         
@@ -217,7 +234,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             // use 10,20,30,40 as placeholder for the 4 ball sizes
             assert([10,20,30,40].contains(Int(spawnPoint.size.height)))
-            let replace = Ball(ballName: "ball", ballSize: Ball.ballSizes(rawValue: Int(spawnPoint.size.height)/10)!)
+            let replace = Ball(ballName: "\(self.ballName)\(self.ballNameCounter)", ballSize: Ball.ballSizes(rawValue: Int(spawnPoint.size.height)/10)!)
+            self.ballNameCounter = self.ballNameCounter + 1
             replace.position = spawnPoint.position
             replace.setBallColor(spawnPoint.color)
 
@@ -323,8 +341,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 // if the ball hits the ground also keep the Y-velocity constant (height of bounce)
                 if((secondBody.node as? SKScene) != nil) {
-                    //if(currentBall!.position.y <= self.view!.frame.height/2) {
-                    print(currentBall!.position.y)
                     if(currentBall!.position.y <= controlPanelHeight+currentBall!.size.height/2+10) {
                         currentBall?.checkGroundVelocity()
                     }
@@ -372,15 +388,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // if hook hits a ball, subdivide into 2 unless it's the smallest size already
                 if(currentBall!.sizeOfBall != Ball.ballSizes.small && currentBall!.sizeOfBall != Ball.ballSizes.mini) {
                     
-                    let leftBall = Ball.divide(currentBall!)
+                    let leftBall = Ball.divide(currentBall!, name: "\(self.ballName)\(self.ballNameCounter)")
+                    self.ballNameCounter = self.ballNameCounter + 1
                     leftBall.position = CGPoint(x: currentBall!.position.x-10, y: currentBall!.position.y)
                     gameNode.addChild(leftBall)
                     leftBall.physicsBody!.applyImpulse(CGVectorMake(-Ball.getPushVelocity(leftBall.sizeOfBall), 0))
                     
-                    let rightBall = Ball.divide(currentBall!)
+                    let rightBall = Ball.divide(currentBall!, name: "\(self.ballName)\(self.ballNameCounter)")
+                    self.ballNameCounter = self.ballNameCounter + 1
                     rightBall.position = CGPoint(x: currentBall!.position.x+10, y: currentBall!.position.y)
                     gameNode.addChild(rightBall)
                     rightBall.physicsBody!.applyImpulse(CGVectorMake(Ball.getPushVelocity(rightBall.sizeOfBall), 0))
+                    
+                    if(self.timeStopActiveCounter > 0) {
+                        leftBall.timeStopVelocity = (leftBall.physicsBody?.velocity)!
+                        leftBall.physicsBody?.dynamic = false
+                        rightBall.timeStopVelocity = (rightBall.physicsBody?.velocity)!
+                        rightBall.physicsBody?.dynamic = false
+                    }
                 }
             }
             
@@ -452,12 +477,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func powerupLottery(point: CGPoint) {
-        // 10% chance of spawning a powerup
-        //if(rand() % 10 == 0) {
+        // 20% chance of spawning a powerup
+        if(rand() % 5 == 0) {
         
             // randomly pick one of the 6 available powerups
             let powerupType = PowerUp.randomPowerUp()
-            //let powerupType = PowerUp.powerupType.shield
+            //let powerupType = PowerUp.powerupType.timeStop
             let newPowerup = PowerUp(powerupName: "powerup", powerupSize: CGSize(width: 20,height: 20), type: powerupType)
             
             newPowerup.position = point
@@ -470,7 +495,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 newPowerup.removeFromParent()
             }
             newPowerup.runAction(SKAction.sequence([wait, run]))
-        //}
+        }
     }
     
     
@@ -497,36 +522,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             
         case .timeStop:
-
-            var ballVelocities = [CGVector]()
+            
+            timeStopActiveCounter = timeStopActiveCounter + 1
             
             // stop all ball physics
-            gameNode.enumerateChildNodesWithName(ballName, usingBlock: {
+            gameNode.enumerateChildNodesWithName("//\(self.ballName)[0-9]*", usingBlock: {
                 (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
                 
-                ballVelocities.append(((ball as! Ball).physicsBody?.velocity)!)
-                
+                //self.ballVelocities.append(((ball as! Ball).physicsBody?.velocity)!)
+
+                (ball as! Ball).timeStopVelocity = ((ball as! Ball).physicsBody?.velocity)!
                 (ball as! Ball).physicsBody?.dynamic = false
-                
             })
             
             // reset ball velocities after time starts again
             let wait = SKAction.waitForDuration(PowerUp.timeStopDuration)
             let run = SKAction.runBlock {
                 
-                self.gameNode.enumerateChildNodesWithName(self.ballName, usingBlock: {
-                    (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
-                    
-                    (ball as! Ball).physicsBody?.dynamic = true
-                    (ball as! Ball).physicsBody?.velocity = ballVelocities.removeFirst()
-                })
+                self.timeStopActiveCounter = self.timeStopActiveCounter - 1
                 
+                if(self.timeStopActiveCounter == 0) {
+                    self.gameNode.enumerateChildNodesWithName("//\(self.ballName)[0-9]*", usingBlock: {
+                        (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
+                        
+                        (ball as! Ball).physicsBody?.dynamic = true
+                        (ball as! Ball).physicsBody?.velocity = (ball as! Ball).timeStopVelocity
+                        //(ball as! Ball).physicsBody?.velocity = self.ballVelocities.removeFirst()
+                    })
+                }
             }
             gameNode.runAction(SKAction.sequence([wait, run]))
             
             
         case .dynamite:
-            gameNode.enumerateChildNodesWithName(ballName, usingBlock: {
+            gameNode.enumerateChildNodesWithName("//\(self.ballName)[0-9]*", usingBlock: {
                 (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
                 
                 (ball as! Ball).sizeOfBall = Ball.ballSizes.small
@@ -575,10 +604,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func isGameFinished() -> Bool {
-        if (gameRunning && (gameNode.childNodeWithName(ballName) == nil)) {
+        if (gameRunning && (gameNode.childNodeWithName("//\(self.ballName)[0-9]*") == nil)) {
             //let ballNode = createBall(CGPoint(x:self.frame.size.width/2, y:self.frame.size.height/2), scale: 1.0)
             //ballNode.physicsBody!.applyImpulse(CGVectorMake(5, 0))
-            print("no more balls")
+            //print("no more balls")
             return true
         }
         return false
@@ -616,6 +645,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.scene!.view!.presentScene(newscene, transition: transition)
     }
     
+    func pauseScene() {
+        
+        scene?.paused = true
+    }
+    
+    func restartScene() {
+        scene?.paused = false
+        unpauseActions = true
+    }
+    
     override func didSimulatePhysics() {
 
         // enumerate through all the hooks
@@ -637,6 +676,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
    
     override func update(currentTime: CFTimeInterval) {
+        // adjust countdown for time elapsed while game was in background
+        if(unpauseActions && gameRunning) {
+            pausedTimeDifference = pausedTimeDifference + (Int)(currentTime - lastUpdateTime)
+            unpauseActions = false
+        }
+        lastUpdateTime = currentTime
+        
         if(isGameFinished()) {
             beginNextLevel()
         }
@@ -646,7 +692,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             startTime = currentTime
             startCountdown = false
         }
-        let countDown = timeLimit - (Int)(currentTime-startTime)
+        let countDown = timeLimit - (Int)(currentTime-startTime) + pausedTimeDifference
         if(countDown >= 0) {
             countdownNode.text = String(countDown)
         }
@@ -665,7 +711,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         //let ball = self.childNodeWithName(ballName) as! SKSpriteNode
-        gameNode.enumerateChildNodesWithName(ballName, usingBlock: {
+        gameNode.enumerateChildNodesWithName("//\(self.ballName)[0-9]*", usingBlock: {
             (ball: SKNode!, stop: UnsafeMutablePointer <ObjCBool>) -> Void in
 
             (ball as! Ball).checkBounce()

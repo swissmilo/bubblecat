@@ -16,6 +16,7 @@ class Ball : SKSpriteNode
     static let ballTex = SKTexture(imageNamed: Ball.ballImageName)
     var sizeOfBall: ballSizes
     var lastVelocityX: CGFloat = 0
+    var timeStopVelocity: CGVector = CGVector()
     
     enum ballSizes : Int {
         case mini = 1, small=2, medium=3, large=4
@@ -74,9 +75,9 @@ class Ball : SKSpriteNode
         physicsBody?.velocity.dy = getMinVelocityY()
     }
     
-    static func divide(ball: Ball) -> Ball {
+    static func divide(ball: Ball, name:String) -> Ball {
         assert(ball.sizeOfBall != ballSizes.mini)
-        let newBall = Ball(ballName: ball.name!, ballSize: ballSizes(rawValue: ball.sizeOfBall.rawValue - 1)!)
+        let newBall = Ball(ballName: name, ballSize: ballSizes(rawValue: ball.sizeOfBall.rawValue - 1)!)
         newBall.setBallColor(ball.color)
         return newBall
     }
