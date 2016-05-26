@@ -16,7 +16,7 @@ let PowerupCategory : UInt32 = 0x1 << 5
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    static let backgroundMusic = SKAudioNode(fileNamed: "blop.mp3")
+    static let backgroundMusic = SKAudioNode(fileNamed: "background.mp3")
     static let popSound = SKAudioNode(fileNamed: "blop.mp3")
 
     static let buttonImageName = "button"
@@ -69,7 +69,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     required init?(coder aDecoder: NSCoder) {
         
-        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 70, height: 50))
+        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 30, height: 50))
         super.init(coder: aDecoder)
         //fatalError("init(coder:) has not been implemented")
     }
@@ -94,9 +94,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(gameNode)
         addChild(layoutNode)
         
-        //GameScene.popSound.autoplayLooped = false
+        
+        //GameScene.backgroundMusic.removeFromParent()
         //addChild(GameScene.backgroundMusic)
-        //addChild(GameScene.popSound)
+        
+        runAction(SKAction.waitForDuration(0.1), completion: {
+            self.addChild(GameScene.backgroundMusic)
+            
+            GameScene.popSound.autoplayLooped = false
+            self.addChild(GameScene.popSound)
+        })
         
         setupLayout()
         
@@ -106,8 +113,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // replace spawn points from Level scene with bricks and balls
         levelLoader()
+        PowerUp.active = PowerUp.powerupType.none
         
-        // TODO should be based on playarea height
         hooks.append(Hook(hookName: "hook1", ladderHeight: self.view!.frame.height))
         hooks.append(Hook(hookName: "hook2", ladderHeight: self.view!.frame.height))
     }
@@ -119,7 +126,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // For devices with 4:3 screen ratio (iPad and iPhone 4), increase control panel height to maintain the dimensions of the play area
         controlPanelHeight = isWideScreen ? 70 : 70 + self.frame.height-self.frame.width/(667/375)
         controlPanelWidth = self.frame.width - controlPanelHeight
-        
+ 
         // the play area has inward physical boundaries for the ball to bounce off from
         physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRect(x:self.frame.minX,y:self.frame.minY+controlPanelHeight,width:self.frame.maxX,height:self.frame.maxY-controlPanelHeight))
         physicsBody!.friction = 0
@@ -316,7 +323,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 // if the ball hits the ground also keep the Y-velocity constant (height of bounce)
                 if((secondBody.node as? SKScene) != nil) {
-                    if(currentBall!.position.y <= self.view!.frame.height/2) {
+                    //if(currentBall!.position.y <= self.view!.frame.height/2) {
+                    print(currentBall!.position.y)
+                    if(currentBall!.position.y <= controlPanelHeight+currentBall!.size.height/2+10) {
                         currentBall?.checkGroundVelocity()
                     }
                 }
@@ -340,6 +349,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 powerupNode?.removeAllActions()
                 powerupNode?.removeFromParent()
+            }
+        }
+        
+        // Powerup lands on obstacle - don't let it bounce
+        if firstBody.categoryBitMask == ObstacleCategory && secondBody.categoryBitMask == PowerupCategory {
+            
+            if(secondBody.node != nil) {
+                secondBody.velocity.dx = 0
+                secondBody.velocity.dy = 0
             }
         }
         
@@ -378,7 +396,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
             
-            //GameScene.popSound.runAction(SKAction.play())
+            GameScene.popSound.runAction(SKAction.play())
             
             //popSound.removeAllActions()
             //popSound.runAction(SKAction.play())
