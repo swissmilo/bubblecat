@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "262025B31CB36A1E00BD637E"
-               BuildableName = "BubbleCat.app"
-               BlueprintName = "BubbleCat"
-               ReferencedContainer = "container:BubbleCat.xcodeproj">
+               BuildableName = "Bubble Hunters.app"
+               BlueprintName = "BubbleHunter"
+               ReferencedContainer = "container:BubbleHunter.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "262025CB1CB36A1E00BD637E"
-               BuildableName = "BubbleCatTests.xctest"
-               BlueprintName = "BubbleCatTests"
-               ReferencedContainer = "container:BubbleCat.xcodeproj">
+               BuildableName = "BubbleHunterTests.xctest"
+               BlueprintName = "BubbleHunterTests"
+               ReferencedContainer = "container:BubbleHunter.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "262025D61CB36A1E00BD637E"
-               BuildableName = "BubbleCatUITests.xctest"
-               BlueprintName = "BubbleCatUITests"
-               ReferencedContainer = "container:BubbleCat.xcodeproj">
+               BuildableName = "BubbleHunterTests.xctest"
+               BlueprintName = "BubbleHunterUITests"
+               ReferencedContainer = "container:BubbleHunter.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -53,18 +53,18 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "262025B31CB36A1E00BD637E"
-            BuildableName = "BubbleCat.app"
-            BlueprintName = "BubbleCat"
-            ReferencedContainer = "container:BubbleCat.xcodeproj">
+            BuildableName = "Bubble Hunters.app"
+            BlueprintName = "BubbleHunter"
+            ReferencedContainer = "container:BubbleHunter.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      buildConfiguration = "Release"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "262025B31CB36A1E00BD637E"
-            BuildableName = "BubbleCat.app"
-            BlueprintName = "BubbleCat"
-            ReferencedContainer = "container:BubbleCat.xcodeproj">
+            BuildableName = "Bubble Hunters.app"
+            BlueprintName = "BubbleHunter"
+            ReferencedContainer = "container:BubbleHunter.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -95,9 +95,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "262025B31CB36A1E00BD637E"
-            BuildableName = "BubbleCat.app"
-            BlueprintName = "BubbleCat"
-            ReferencedContainer = "container:BubbleCat.xcodeproj">
+            BuildableName = "Bubble Hunters.app"
+            BlueprintName = "BubbleHunter"
+            ReferencedContainer = "container:BubbleHunter.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

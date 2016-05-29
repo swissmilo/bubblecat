@@ -47,16 +47,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		262025B41CB36A1E00BD637E /* BubbleCat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BubbleCat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		262025B41CB36A1E00BD637E /* Bubble Hunters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bubble Hunters.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		262025B71CB36A1E00BD637E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		262025BB1CB36A1E00BD637E /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		262025BD1CB36A1E00BD637E /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		262025C21CB36A1E00BD637E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		262025C71CB36A1E00BD637E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		262025CC1CB36A1E00BD637E /* BubbleCatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BubbleCatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		262025CC1CB36A1E00BD637E /* BubbleHunterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BubbleHunterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		262025D01CB36A1E00BD637E /* BubbleCatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleCatTests.swift; sourceTree = "<group>"; };
 		262025D21CB36A1E00BD637E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		262025D71CB36A1E00BD637E /* BubbleCatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BubbleCatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		262025D71CB36A1E00BD637E /* BubbleHunterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BubbleHunterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		262025DB1CB36A1E00BD637E /* BubbleCatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleCatUITests.swift; sourceTree = "<group>"; };
 		262025DD1CB36A1E00BD637E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		263AD0C91CB9B2F00056EF9D /* Hook.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hook.swift; sourceTree = "<group>"; };
@@ -113,9 +113,9 @@
 		262025B51CB36A1E00BD637E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				262025B41CB36A1E00BD637E /* BubbleCat.app */,
-				262025CC1CB36A1E00BD637E /* BubbleCatTests.xctest */,
-				262025D71CB36A1E00BD637E /* BubbleCatUITests.xctest */,
+				262025B41CB36A1E00BD637E /* Bubble Hunters.app */,
+				262025CC1CB36A1E00BD637E /* BubbleHunterTests.xctest */,
+				262025D71CB36A1E00BD637E /* BubbleHunterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -167,9 +167,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		262025B31CB36A1E00BD637E /* BubbleCat */ = {
+		262025B31CB36A1E00BD637E /* BubbleHunter */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 262025E01CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleCat" */;
+			buildConfigurationList = 262025E01CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleHunter" */;
 			buildPhases = (
 				262025B01CB36A1E00BD637E /* Sources */,
 				262025B11CB36A1E00BD637E /* Frameworks */,
@@ -179,14 +179,14 @@
 			);
 			dependencies = (
 			);
-			name = BubbleCat;
+			name = BubbleHunter;
 			productName = BubbleCat;
-			productReference = 262025B41CB36A1E00BD637E /* BubbleCat.app */;
+			productReference = 262025B41CB36A1E00BD637E /* Bubble Hunters.app */;
 			productType = "com.apple.product-type.application";
 		};
-		262025CB1CB36A1E00BD637E /* BubbleCatTests */ = {
+		262025CB1CB36A1E00BD637E /* BubbleHunterTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 262025E31CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleCatTests" */;
+			buildConfigurationList = 262025E31CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleHunterTests" */;
 			buildPhases = (
 				262025C81CB36A1E00BD637E /* Sources */,
 				262025C91CB36A1E00BD637E /* Frameworks */,
@@ -197,14 +197,14 @@
 			dependencies = (
 				262025CE1CB36A1E00BD637E /* PBXTargetDependency */,
 			);
-			name = BubbleCatTests;
+			name = BubbleHunterTests;
 			productName = BubbleCatTests;
-			productReference = 262025CC1CB36A1E00BD637E /* BubbleCatTests.xctest */;
+			productReference = 262025CC1CB36A1E00BD637E /* BubbleHunterTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		262025D61CB36A1E00BD637E /* BubbleCatUITests */ = {
+		262025D61CB36A1E00BD637E /* BubbleHunterUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 262025E61CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleCatUITests" */;
+			buildConfigurationList = 262025E61CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleHunterUITests" */;
 			buildPhases = (
 				262025D31CB36A1E00BD637E /* Sources */,
 				262025D41CB36A1E00BD637E /* Frameworks */,
@@ -215,9 +215,9 @@
 			dependencies = (
 				262025D91CB36A1E00BD637E /* PBXTargetDependency */,
 			);
-			name = BubbleCatUITests;
+			name = BubbleHunterUITests;
 			productName = BubbleCatUITests;
-			productReference = 262025D71CB36A1E00BD637E /* BubbleCatUITests.xctest */;
+			productReference = 262025D71CB36A1E00BD637E /* BubbleHunterTests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -232,7 +232,7 @@
 				TargetAttributes = {
 					262025B31CB36A1E00BD637E = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = 2GDV6C6L3P;
+						DevelopmentTeam = M64CT42FSP;
 					};
 					262025CB1CB36A1E00BD637E = {
 						CreatedOnToolsVersion = 7.3;
@@ -244,7 +244,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 262025AF1CB36A1E00BD637E /* Build configuration list for PBXProject "BubbleCat" */;
+			buildConfigurationList = 262025AF1CB36A1E00BD637E /* Build configuration list for PBXProject "BubbleHunter" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -257,9 +257,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				262025B31CB36A1E00BD637E /* BubbleCat */,
-				262025CB1CB36A1E00BD637E /* BubbleCatTests */,
-				262025D61CB36A1E00BD637E /* BubbleCatUITests */,
+				262025B31CB36A1E00BD637E /* BubbleHunter */,
+				262025CB1CB36A1E00BD637E /* BubbleHunterTests */,
+				262025D61CB36A1E00BD637E /* BubbleHunterUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -335,12 +335,12 @@
 /* Begin PBXTargetDependency section */
 		262025CE1CB36A1E00BD637E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 262025B31CB36A1E00BD637E /* BubbleCat */;
+			target = 262025B31CB36A1E00BD637E /* BubbleHunter */;
 			targetProxy = 262025CD1CB36A1E00BD637E /* PBXContainerItemProxy */;
 		};
 		262025D91CB36A1E00BD637E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 262025B31CB36A1E00BD637E /* BubbleCat */;
+			target = 262025B31CB36A1E00BD637E /* BubbleHunter */;
 			targetProxy = 262025D81CB36A1E00BD637E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -455,10 +455,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = BubbleCat/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = milo.BubbleCat;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = swiss.milo;
+				PRODUCT_NAME = "Bubble Hunters";
 				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
@@ -470,10 +470,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = BubbleCat/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = milo.BubbleCat;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = swiss.milo;
+				PRODUCT_NAME = "Bubble Hunters";
 				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
@@ -486,8 +486,8 @@
 				INFOPLIST_FILE = BubbleCatTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = milo.BubbleCatTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BubbleCat.app/BubbleCat";
+				PRODUCT_NAME = BubbleHunterTests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BubbleHunter.app/BubbleHunter";
 			};
 			name = Debug;
 		};
@@ -498,8 +498,8 @@
 				INFOPLIST_FILE = BubbleCatTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = milo.BubbleCatTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BubbleCat.app/BubbleCat";
+				PRODUCT_NAME = BubbleHunterTests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BubbleHunter.app/BubbleHunter";
 			};
 			name = Release;
 		};
@@ -510,7 +510,7 @@
 				INFOPLIST_FILE = BubbleCatUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = milo.BubbleCatUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BubbleHunterTests;
 				TEST_TARGET_NAME = BubbleCat;
 			};
 			name = Debug;
@@ -521,7 +521,7 @@
 				INFOPLIST_FILE = BubbleCatUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = milo.BubbleCatUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BubbleHunterTests;
 				TEST_TARGET_NAME = BubbleCat;
 			};
 			name = Release;
@@ -529,7 +529,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		262025AF1CB36A1E00BD637E /* Build configuration list for PBXProject "BubbleCat" */ = {
+		262025AF1CB36A1E00BD637E /* Build configuration list for PBXProject "BubbleHunter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				262025DE1CB36A1E00BD637E /* Debug */,
@@ -538,7 +538,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		262025E01CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleCat" */ = {
+		262025E01CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleHunter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				262025E11CB36A1F00BD637E /* Debug */,
@@ -547,7 +547,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		262025E31CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleCatTests" */ = {
+		262025E31CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleHunterTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				262025E41CB36A1F00BD637E /* Debug */,
@@ -556,7 +556,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		262025E61CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleCatUITests" */ = {
+		262025E61CB36A1F00BD637E /* Build configuration list for PBXNativeTarget "BubbleHunterUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				262025E71CB36A1F00BD637E /* Debug */,

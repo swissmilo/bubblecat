@@ -69,13 +69,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override init(size: CGSize) {
         
-        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 70, height: 50))
+        // this method is not called
+        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 30, height: 50))
         super.init(size: size)
     }
     
     required init?(coder aDecoder: NSCoder) {
         
-        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 30, height: 50))
+        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 25, height: 60))
         super.init(coder: aDecoder)
         //fatalError("init(coder:) has not been implemented")
     }
@@ -153,6 +154,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsBody!.affectedByGravity = false
         physicsBody!.categoryBitMask = ObstacleCategory
         
+        // TODO create contact areas for Floor and Walls instead of using ObstacleCategory only
+        
         // set up node for the background texture
         let backgroundSize = CGSize(width:self.frame.width,height:self.frame.height-controlPanelHeight)
         backgroundNode = SKSpriteNode()
@@ -180,9 +183,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         swipeNode.name = swipeAreaName
         layoutNode.addChild(swipeNode)
     
-        let buttonSize = CGSize(width:controlPanelHeight,height:controlPanelHeight)
+        let buttonSize = CGSize(width:controlPanelHeight+20,height:controlPanelHeight)
         buttonNode = SKSpriteNode(texture: GameScene.buttonTex, size: buttonSize)
-        buttonNode.position = CGPoint(x: controlPanelWidth + buttonSize.width/2,y: buttonSize.height/2)
+        buttonNode.position = CGPoint(x: controlPanelWidth + buttonSize.width/2 - 20,y: buttonSize.height/2)
         buttonNode.zPosition = 100
         buttonNode.physicsBody = SKPhysicsBody(rectangleOfSize: buttonSize)
         buttonNode.physicsBody!.dynamic = false
@@ -334,7 +337,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(firstBody.node != nil) {
                 
                 //let speed = sqrt(firstBody.velocity.dx * firstBody.velocity.dx + firstBody.velocity.dy * firstBody.velocity.dy)
-                //print("Speed \(speed) and x is \(firstBody.velocity.dx)")
+                //print("Before \(firstBody.node?.name) x: \(firstBody.velocity.dx) y: \(firstBody.velocity.dy) and x pos \(firstBody.node?.position.x)")
                 //print("Speed \(speed) and y is \(firstBody.velocity.dy)")
                 
                 let currentBall = firstBody.node as? Ball
@@ -352,6 +355,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 else {
                     currentBall!.lastVelocityX = firstBody.velocity.dx
                 }
+                
+                //print("After \(firstBody.node?.name)  x: \(firstBody.velocity.dx) y: \(firstBody.velocity.dy) and x pos \(firstBody.node?.position.x)")
             }
         }
         
