@@ -398,12 +398,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     leftBall.position = CGPoint(x: currentBall!.position.x-10, y: currentBall!.position.y)
                     gameNode.addChild(leftBall)
                     leftBall.physicsBody!.applyImpulse(CGVectorMake(-Ball.getPushVelocity(leftBall.sizeOfBall), 0))
+                    //print(leftBall.physicsBody!.velocity.dx)
+                    leftBall.lastVelocityX = leftBall.physicsBody!.velocity.dx
                     
                     let rightBall = Ball.divide(currentBall!, name: "\(self.ballName)\(self.ballNameCounter)")
                     self.ballNameCounter = self.ballNameCounter + 1
                     rightBall.position = CGPoint(x: currentBall!.position.x+10, y: currentBall!.position.y)
                     gameNode.addChild(rightBall)
                     rightBall.physicsBody!.applyImpulse(CGVectorMake(Ball.getPushVelocity(rightBall.sizeOfBall), 0))
+                    rightBall.lastVelocityX = rightBall.physicsBody!.velocity.dx
                     
                     if(self.timeStopActiveCounter > 0) {
                         leftBall.timeStopVelocity = (leftBall.physicsBody?.velocity)!
