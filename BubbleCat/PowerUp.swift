@@ -54,7 +54,7 @@ class PowerUp : SKSpriteNode
         self.physicsBody!.allowsRotation = false
         self.physicsBody!.friction = 0
         self.physicsBody!.restitution = 0
-        self.physicsBody!.linearDamping = 0
+        self.physicsBody!.linearDamping = 1.0
         self.physicsBody!.angularDamping = 0
         self.physicsBody!.usesPreciseCollisionDetection = true
         self.physicsBody!.categoryBitMask = PowerupCategory

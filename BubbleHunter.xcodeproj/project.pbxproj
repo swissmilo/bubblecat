@@ -27,6 +27,7 @@
 		26C037BE1CB4CF68002F58AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C037BC1CB4CF68002F58AE /* LaunchScreen.storyboard */; };
 		26CFFC641CC166D00083C8B9 /* Level2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 26CFFC631CC166D00083C8B9 /* Level2.sks */; };
 		26CFFC661CC16BB40083C8B9 /* Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFFC651CC16BB40083C8B9 /* Actor.swift */; };
+		26D963FE1D000EA90063CECC /* Level3.sks in Resources */ = {isa = PBXBuildFile; fileRef = 26D963FD1D000EA90063CECC /* Level3.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		26C037BD1CB4CF68002F58AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		26CFFC631CC166D00083C8B9 /* Level2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level2.sks; sourceTree = "<group>"; };
 		26CFFC651CC16BB40083C8B9 /* Actor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actor.swift; sourceTree = "<group>"; };
+		26D963FD1D000EA90063CECC /* Level3.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level3.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 				263AD0CD1CB9CFCD0056EF9D /* Ball.swift */,
 				263AD0CF1CBAC77E0056EF9D /* Brick.swift */,
 				26CFFC631CC166D00083C8B9 /* Level2.sks */,
+				26D963FD1D000EA90063CECC /* Level3.sks */,
 				263AD0D11CBB4AF40056EF9D /* Level1.sks */,
 				26CFFC651CC16BB40083C8B9 /* Actor.swift */,
 				26BA839A1CEEDFCC00F943D2 /* PowerUp.swift */,
@@ -272,6 +275,7 @@
 				26C037BE1CB4CF68002F58AE /* LaunchScreen.storyboard in Resources */,
 				263AD0CC1CB9C7D60056EF9D /* blop.mp3 in Resources */,
 				263AD0D21CBB4AF40056EF9D /* Level1.sks in Resources */,
+				26D963FE1D000EA90063CECC /* Level3.sks in Resources */,
 				262025C31CB36A1E00BD637E /* Assets.xcassets in Resources */,
 				26ACA8901CF6BB8F0085F000 /* background.mp3 in Resources */,
 				26C037BB1CB4CE3D002F58AE /* Main.storyboard in Resources */,

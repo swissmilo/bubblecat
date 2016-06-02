@@ -112,12 +112,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(gameNode)
         addChild(layoutNode)
         
-        
-        //GameScene.backgroundMusic.removeFromParent()
-        //addChild(GameScene.backgroundMusic)
-        
         runAction(SKAction.waitForDuration(0.1), completion: {
-            self.addChild(GameScene.backgroundMusic)
+            //self.addChild(GameScene.backgroundMusic)
             
             GameScene.popSound.autoplayLooped = false
             self.addChild(GameScene.popSound)
@@ -249,6 +245,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             // use velocity set on physics body for setup
             replace.physicsBody!.applyImpulse(spawnPoint.physicsBody!.velocity)
+            replace.lastVelocityX = replace.physicsBody!.velocity.dx
         }
     }
     
@@ -336,11 +333,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if(firstBody.node != nil) {
                 
-                //let speed = sqrt(firstBody.velocity.dx * firstBody.velocity.dx + firstBody.velocity.dy * firstBody.velocity.dy)
-                //print("Before \(firstBody.node?.name) x: \(firstBody.velocity.dx) y: \(firstBody.velocity.dy) and x pos \(firstBody.node?.position.x)")
-                //print("Speed \(speed) and y is \(firstBody.velocity.dy)")
-                
                 let currentBall = firstBody.node as? Ball
+                
+                //print("vector x: \(contact.contactNormal.dx) y: \(contact.contactNormal.dy)")
+                //print("impulse: \(contact.collisionImpulse)")
+                
+                //let speed = sqrt(firstBody.velocity.dx * firstBody.velocity.dx + firstBody.velocity.dy * firstBody.velocity.dy)
+                //print("Before \(firstBody.node?.name) xvel: \(firstBody.velocity.dx) y: \(firstBody.velocity.dy) and x pos \(firstBody.node?.position.x) and lastvel \(currentBall?.lastVelocityX)")
+                //print("Speed \(speed) and y is \(firstBody.velocity.dy)")
                 
                 // if the ball hits the ground also keep the Y-velocity constant (height of bounce)
                 if((secondBody.node as? SKScene) != nil) {
@@ -349,8 +349,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     }
                 }
                 
-                if(firstBody.velocity.dx == 0) {
+                //print("contact \(contact.contactPoint.y) target \(secondBody.node!.position.y + secondBody.node!.frame.height/2)")
+                
+                //if(firstBody.velocity.dx == 0) {
+                if(abs(firstBody.velocity.dx) < 0.1) {
                     firstBody.velocity.dx = -currentBall!.lastVelocityX
+                    
+                    //print("**** REVERTED TO OLD VEL")
+                    //let obstacle = secondBody.node as? SKSpriteNode
+                    
+                    //if(abs(contact.contactNormal.dx) > 0) {
+                    /*if((contact.contactPoint.y) < (secondBody.node!.position.y + obstacle!.size.height/2)) {
+                        firstBody.velocity.dx = -firstBody.velocity.dx
+                        
+                        //print("asset height \(obstacle!.size.height/2)")
+                        //print("target pos \(secondBody.node!.position.y)")
+                        print("**** REVERTED DIRECTION")
+                        //print("contact \(contact.contactPoint.y) target \(secondBody.node!.position.y + obstacle!.size.height/2)")
+                        //print("Before \(firstBody.node?.name) xvel: \(firstBody.velocity.dx) y: \(firstBody.velocity.dy) and x pos \(firstBody.node?.position.x) ypos \(firstBody.node?.position.y) and lastvel \(currentBall?.lastVelocityX)")
+                        //firstBody.dynamic = false
+                    }*/
+                    
                 }
                 else {
                     currentBall!.lastVelocityX = firstBody.velocity.dx
@@ -444,6 +463,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     brick.destroy()
                     firstBody.node?.removeAllActions()
                     firstBody.node?.removeFromParent()
+                    powerupLottery(brick.position)
                     return
                 }
             }
