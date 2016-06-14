@@ -34,8 +34,13 @@ class Brick : SKSpriteNode
     }
     
     func setBrickColor(color:UIColor) {
-        self.color = color
-        self.colorBlendFactor = 1.0
+        let colorNode = SKSpriteNode(color: color, size: self.size)
+        colorNode.colorBlendFactor = 1.0
+        colorNode.blendMode = SKBlendMode.Add
+        self.addChild(colorNode)
+        
+        //self.color = color
+        //self.colorBlendFactor = 1.0
     }
     
     func destroy() {

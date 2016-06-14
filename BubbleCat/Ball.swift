@@ -42,8 +42,22 @@ class Ball : SKSpriteNode
     }
     
     func setBallColor(color:UIColor) {
-        self.color = color
-        self.colorBlendFactor = 1.0
+        let cropMask = SKCropNode()
+        cropMask.maskNode = SKSpriteNode(texture: Ball.ballTex)
+        cropMask.alpha = 1
+        self.addChild(cropMask)
+        
+        
+        let colorNode = SKSpriteNode(color: color, size: self.size)
+        colorNode.colorBlendFactor = 1.0
+        //colorNode.alpha = 0
+        colorNode.blendMode = SKBlendMode.Add
+        cropMask.addChild(colorNode)
+        
+        //self.color = color
+        //self.colorBlendFactor = 1.0
+        //self.blendMode = SKBlendMode.Add
+        // let action = SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 1, duration: 1)
     }
     
     func checkBounce() {

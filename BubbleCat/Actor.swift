@@ -20,10 +20,11 @@ class Actor : SKSpriteNode
     init(actorName:String, actorSize:CGSize) {
      
         if(Actor.walkFrames.count == 0) {
-            let actorAnimatedAtlas = SKTextureAtlas(named: "BearImages")
+            Actor.walkFrames.append(Actor.actorTex)
+            let actorAnimatedAtlas = SKTextureAtlas(named: "HunterImages")
             let numImages = actorAnimatedAtlas.textureNames.count
             for i in 1...numImages {
-                let actorTextureName = "bear\(i)"
+                let actorTextureName = "hunter\(i)"
                 Actor.walkFrames.append(actorAnimatedAtlas.textureNamed(actorTextureName))
             }
         }
