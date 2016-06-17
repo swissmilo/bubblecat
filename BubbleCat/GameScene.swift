@@ -153,7 +153,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // TODO create contact areas for Floor and Walls instead of using ObstacleCategory only
         
         // set up node for the background texture
-        let backgroundSize = CGSize(width:self.frame.width,height:self.frame.height-controlPanelHeight)
+        let backgroundSize = CGSize(width:self.frame.width,height:self.frame.height)
         backgroundNode = SKSpriteNode()
         backgroundNode.size = backgroundSize
         //backgroundNode.position = CGPoint(x: self.frame.width/2,y: controlPanelHeight+(self.frame.height-controlPanelHeight)/2)
