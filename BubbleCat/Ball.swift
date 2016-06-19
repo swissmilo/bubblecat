@@ -42,7 +42,24 @@ class Ball : SKSpriteNode
     }
     
     func setBallColor(color:UIColor) {
-        let cropMask = SKCropNode()
+        
+        self.color = color
+        
+        self.colorBlendFactor = 1.0
+        self.alpha = 0.6
+        
+        self.blendMode = SKBlendMode.Alpha
+        
+        /*let colorRGB = CoreImage.CIColor(color: color)
+        
+        let shader = SKShader(fileNamed: "alphachannel.fsh")
+        shader.uniforms = [
+            SKUniform(name: "size", floatVector3: GLKVector3Make(Float(Ball.ballTex.size().width), Float(Ball.ballTex.size().height), 0)),
+            SKUniform(name: "color", floatVector3: GLKVector3Make(Float(colorRGB.red), Float(colorRGB.green), Float(colorRGB.blue)))
+        ]
+        self.shader = shader*/
+        
+        /*let cropMask = SKCropNode()
         cropMask.maskNode = SKSpriteNode(texture: Ball.ballTex)
         cropMask.alpha = 1
         self.addChild(cropMask)
@@ -52,7 +69,7 @@ class Ball : SKSpriteNode
         colorNode.colorBlendFactor = 1.0
         //colorNode.alpha = 0
         colorNode.blendMode = SKBlendMode.Add
-        cropMask.addChild(colorNode)
+        cropMask.addChild(colorNode)*/
         
         //self.color = color
         //self.colorBlendFactor = 1.0

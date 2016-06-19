@@ -18,6 +18,7 @@
 		263AD0CE1CB9CFCD0056EF9D /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263AD0CD1CB9CFCD0056EF9D /* Ball.swift */; };
 		263AD0D01CBAC77E0056EF9D /* Brick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263AD0CF1CBAC77E0056EF9D /* Brick.swift */; };
 		263AD0D21CBB4AF40056EF9D /* Level1.sks in Resources */ = {isa = PBXBuildFile; fileRef = 263AD0D11CBB4AF40056EF9D /* Level1.sks */; };
+		266BC1911D13A9910050DA1E /* underwater.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 266BC1901D13A9910050DA1E /* underwater.fsh */; };
 		26ACA8901CF6BB8F0085F000 /* background.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 26ACA88F1CF6BB8F0085F000 /* background.mp3 */; };
 		26B7D9081CB76686006885F0 /* HunterImages.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 26B7D9071CB76686006885F0 /* HunterImages.atlas */; };
 		26B7D90A1CB77D07006885F0 /* GameoverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B7D9091CB77D07006885F0 /* GameoverScene.swift */; };
@@ -28,6 +29,7 @@
 		26CFFC641CC166D00083C8B9 /* Level2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 26CFFC631CC166D00083C8B9 /* Level2.sks */; };
 		26CFFC661CC16BB40083C8B9 /* Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFFC651CC16BB40083C8B9 /* Actor.swift */; };
 		26D963FE1D000EA90063CECC /* Level3.sks in Resources */ = {isa = PBXBuildFile; fileRef = 26D963FD1D000EA90063CECC /* Level3.sks */; };
+		26E8EAD51D1685A2002BC7FB /* alphachannel.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 26E8EAD41D1685A2002BC7FB /* alphachannel.fsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,7 @@
 		263AD0CD1CB9CFCD0056EF9D /* Ball.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
 		263AD0CF1CBAC77E0056EF9D /* Brick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Brick.swift; sourceTree = "<group>"; };
 		263AD0D11CBB4AF40056EF9D /* Level1.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level1.sks; sourceTree = "<group>"; };
+		266BC1901D13A9910050DA1E /* underwater.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = underwater.fsh; sourceTree = "<group>"; };
 		26ACA88F1CF6BB8F0085F000 /* background.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = background.mp3; sourceTree = "<group>"; };
 		26B7D9071CB76686006885F0 /* HunterImages.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = HunterImages.atlas; sourceTree = "<group>"; };
 		26B7D9091CB77D07006885F0 /* GameoverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameoverScene.swift; sourceTree = "<group>"; };
@@ -75,6 +78,7 @@
 		26CFFC631CC166D00083C8B9 /* Level2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level2.sks; sourceTree = "<group>"; };
 		26CFFC651CC16BB40083C8B9 /* Actor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actor.swift; sourceTree = "<group>"; };
 		26D963FD1D000EA90063CECC /* Level3.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level3.sks; sourceTree = "<group>"; };
+		26E8EAD41D1685A2002BC7FB /* alphachannel.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = alphachannel.fsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +149,8 @@
 				263AD0D11CBB4AF40056EF9D /* Level1.sks */,
 				26CFFC651CC16BB40083C8B9 /* Actor.swift */,
 				26BA839A1CEEDFCC00F943D2 /* PowerUp.swift */,
+				26E8EAD41D1685A2002BC7FB /* alphachannel.fsh */,
+				266BC1901D13A9910050DA1E /* underwater.fsh */,
 			);
 			path = BubbleCat;
 			sourceTree = "<group>";
@@ -279,7 +285,9 @@
 				262025C31CB36A1E00BD637E /* Assets.xcassets in Resources */,
 				26ACA8901CF6BB8F0085F000 /* background.mp3 in Resources */,
 				26C037BB1CB4CE3D002F58AE /* Main.storyboard in Resources */,
+				26E8EAD51D1685A2002BC7FB /* alphachannel.fsh in Resources */,
 				26CFFC641CC166D00083C8B9 /* Level2.sks in Resources */,
+				266BC1911D13A9910050DA1E /* underwater.fsh in Resources */,
 				26B7D9081CB76686006885F0 /* HunterImages.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

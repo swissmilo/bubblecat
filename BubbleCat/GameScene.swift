@@ -24,6 +24,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     static let sliderImageName = "slider"
     static let sliderTex = SKTexture(imageNamed: GameScene.sliderImageName)
     
+    static let backgroudTex = SKTexture(imageNamed: "level1")
+    
     static let firstLevel = 1
     static var levelSelector = firstLevel
     
@@ -70,13 +72,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override init(size: CGSize) {
         
         // this method is not called
-        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 30, height: 50))
+        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 0, height: 0))
         super.init(size: size)
     }
     
     required init?(coder aDecoder: NSCoder) {
         
-        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 25, height: 60))
+        actorNode = Actor(actorName: "actor", actorSize: CGSize(width: 37, height: 60))
         super.init(coder: aDecoder)
         //fatalError("init(coder:) has not been implemented")
     }
@@ -155,13 +157,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // set up node for the background texture
         let backgroundSize = CGSize(width:self.frame.width,height:self.frame.height)
         backgroundNode = SKSpriteNode()
+        backgroundNode.texture = GameScene.backgroudTex
         backgroundNode.size = backgroundSize
         //backgroundNode.position = CGPoint(x: self.frame.width/2,y: controlPanelHeight+(self.frame.height-controlPanelHeight)/2)
         backgroundNode.position = CGPoint(x: self.frame.width/2,y: self.frame.height/2)
         backgroundNode.zPosition = -1
         backgroundNode.name = "background"
+        
+        let shader = SKShader(fileNamed: "underwater.fsh")
+        shader.uniforms = [
+            SKUniform(name: "size", floatVector3: GLKVector3Make(Float(GameScene.backgroudTex.size().width), Float(GameScene.backgroudTex.size().height), 0)),
+            SKUniform(name: "customTexture", texture: GameScene.backgroudTex)
+        ]
+        backgroundNode.shader = shader
+        
         layoutNode.addChild(backgroundNode)
-    
+        
         // texture for the entire control panel area
         let controlSize = CGSize(width:self.frame.width,height:controlPanelHeight)
         let controlNode = SKSpriteNode(texture: GameScene.sliderTex, size: controlSize)
@@ -210,8 +221,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func levelLoader() {
-        let backgroudTex = SKTexture(imageNamed: "level\(GameScene.levelSelector)")
-        backgroundNode.texture = backgroudTex
+        //let backgroudTex = SKTexture(imageNamed: "level1")
+        //backgroundNode.texture = backgroudTex
         
         // search and replace nodes from the spritescene file that start with brick
         enumerateChildNodesWithName("//brick[0-9]*") {
