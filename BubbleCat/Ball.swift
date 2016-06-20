@@ -46,9 +46,9 @@ class Ball : SKSpriteNode
         self.color = color
         
         self.colorBlendFactor = 1.0
-        self.alpha = 0.6
+        //self.alpha = 1.0
         
-        self.blendMode = SKBlendMode.Alpha
+        //self.blendMode = SKBlendMode.Alpha
         
         /*let colorRGB = CoreImage.CIColor(color: color)
         

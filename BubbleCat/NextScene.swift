@@ -24,14 +24,21 @@ class NextScene: SKScene {
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         
-        backgroundColor = UIColor.greenColor()
+        // set up node for the background texture
+        let backgroundSize = CGSize(width:self.frame.width,height:self.frame.height)
+        let backgroundNode = SKSpriteNode(texture: SKTexture(imageNamed:"background"), color: UIColor(), size: backgroundSize)
+        backgroundNode.position = CGPoint(x: self.frame.width/2,y: self.frame.height/2)
+        backgroundNode.zPosition = -1
+        addChild(backgroundNode)
         
-        livesNode = SKLabelNode(fontNamed: "Futura-Medium")
-        livesNode.fontSize = 100;
+        //backgroundColor = UIColor.blackColor()
+        
+        livesNode = SKLabelNode(fontNamed: "ChalkboardSE-Regular")
+        livesNode.fontSize = 50;
         livesNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
-        livesNode.fontColor = SKColor.blackColor()
+        livesNode.fontColor = SKColor.whiteColor()
         livesNode.zPosition = 100;
-        livesNode.text = "WIN"
+        livesNode.text = "Level \(GameScene.levelSelector) Complete!"
         addChild(livesNode)
         
     }
@@ -48,6 +55,11 @@ class NextScene: SKScene {
         if(newscene != nil) {
             newscene!.scaleMode = .AspectFit
             self.scene!.view!.presentScene(newscene!, transition: transition)
+        } else {
+            GameScene.levelSelector = GameScene.firstLevel
+            let newgame = GameStartScene(size: view!.bounds.size)
+            newgame.scaleMode = .AspectFit
+            self.scene!.view!.presentScene(newgame, transition: transition)
         }
     }
 }

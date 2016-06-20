@@ -20,7 +20,7 @@ class Actor : SKSpriteNode
     init(actorName:String, actorSize:CGSize) {
      
         if(Actor.walkFrames.count == 0) {
-            Actor.walkFrames.append(Actor.actorTex)
+            //Actor.walkFrames.append(Actor.actorTex)
             let actorAnimatedAtlas = SKTextureAtlas(named: "HunterImages")
             let numImages = actorAnimatedAtlas.textureNames.count
             for i in 1...numImages {
@@ -30,10 +30,10 @@ class Actor : SKSpriteNode
         }
 
         //super.init(texture: Actor.actorTex, color: UIColor(), size: actorSize)
-        super.init(texture: Actor.walkFrames[0], color: UIColor(), size: actorSize)
+        super.init(texture: Actor.actorTex, color: UIColor(), size: actorSize)
 
         self.name = actorName
-        self.zPosition = 1
+        self.zPosition = 101
         
         // TODO create different physics bodies for each frame
         //self.physicsBody = SKPhysicsBody(texture: Actor.walkFrames[0], size: self.size)
@@ -69,6 +69,7 @@ class Actor : SKSpriteNode
             self.removeActionForKey("walkingInPlace")
             isActorMoving = false
         }
+        self.texture = Actor.actorTex
     }
     
     required init(coder aDecoder: NSCoder) {

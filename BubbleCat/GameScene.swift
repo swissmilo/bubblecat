@@ -25,6 +25,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     static let sliderTex = SKTexture(imageNamed: GameScene.sliderImageName)
     
     static let backgroudTex = SKTexture(imageNamed: "level1")
+    static let lifeIconTex = SKTexture(imageNamed: "powerup_1")
+    var lifeIcons = [SKSpriteNode]()
     
     static let firstLevel = 1
     static var levelSelector = firstLevel
@@ -123,7 +125,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         setupLayout()
         
-        actorNode.position = CGPoint(x:self.frame.size.width/2-200, y:controlPanelHeight + actorNode.size.height / 2)
+        actorNode.position = CGPoint(x:self.frame.size.width/2-200, y:controlPanelHeight + actorNode.size.height / 2 - 5)
         gameNode.addChild(actorNode)
         gameNode.addChild(shieldNode)
 
@@ -206,7 +208,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         countdownNode.fontColor = SKColor.whiteColor()
         countdownNode.name = "countDown";
         countdownNode.zPosition = 100;
-        layoutNode.addChild(countdownNode)
+        //layoutNode.addChild(countdownNode)
         
         livesNode = SKLabelNode(fontNamed: "Futura-Medium")
         livesNode.fontSize = 50;
@@ -215,7 +217,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesNode.name = "lives";
         livesNode.zPosition = 100;
         livesNode.text = "\(GameScene.lives) Lifes"
-        layoutNode.addChild(livesNode)
+        //layoutNode.addChild(livesNode)
+        
+        
+        let iconSize = CGSize(width: 30,height: 30)
+        for i in 0...3 {
+            lifeIcons.append(SKSpriteNode(texture: GameScene.lifeIconTex, color: UIColor(), size: iconSize))
+            lifeIcons[i].zPosition = 100
+            let offset = CGFloat(i)*(iconSize.width + 3)
+            let xpos = 5+(iconSize.width/2)+offset
+            let ypos = CGRectGetMaxY(self.frame)-iconSize.height/2-5
+            lifeIcons[i].position = CGPointMake(xpos, ypos)
+            lifeIcons[i].name = "lifeicon"
+            layoutNode.addChild(lifeIcons[i])
+            
+            if(GameScene.lives < (i+1)) {
+                lifeIcons[i].hidden = true
+            }
+        }
         
         //print("panel height is \(controlPanelHeight)")
     }
@@ -278,6 +297,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             else if body.node!.name == buttonAreaName {
                 
+               buttonNode.runAction(SKAction.sequence([SKAction.scaleTo(0.8, duration: 0.1), SKAction.scaleTo(1.0, duration: 0.1)]))
+ 
                 //print("Button")
                 createShot()
             }
@@ -459,8 +480,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 secondBody.node?.removeFromParent()
             }
             
-            
-            GameScene.popSound.runAction(SKAction.play())
+            // the pop sounds for the last ball is sometimes not played until the next scene starts - skip it
+            if (gameNode.childNodeWithName("//\(self.ballName)[0-9]*") != nil) {
+                GameScene.popSound.runAction(SKAction.play())
+            }
             
             //popSound.removeAllActions()
             //popSound.runAction(SKAction.play())
@@ -480,8 +503,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
             
-            // static hook can stick to ceiling or indestructable brick
+            // static hook can stick to ceiling or indestructable brick and freezes for a few seconds
             if(PowerUp.active == PowerUp.powerupType.staticHook) {
+
                 firstBody.dynamic = false
                 
                 // reset ball velocities after time starts again
@@ -508,9 +532,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 PowerUp.shieldActive = false
             } else {
                 GameScene.lives -= 1
-                livesNode.text = "\(GameScene.lives) Lifes"
+                //livesNode.text = "\(GameScene.lives) Lifes"
+                
                 if(GameScene.lives <= 0) {
                     beginGameover()
+                }
+                else {
+                    lifeIcons[GameScene.lives].hidden = true
                 }
             }
         }
@@ -522,7 +550,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
             // randomly pick one of the 6 available powerups
             let powerupType = PowerUp.randomPowerUp()
-            //let powerupType = PowerUp.powerupType.timeStop
+            //let powerupType = PowerUp.powerupType.staticHook
             let newPowerup = PowerUp(powerupName: "powerup", powerupSize: CGSize(width: 20,height: 20), type: powerupType)
             
             newPowerup.position = point
@@ -543,12 +571,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         switch(PowerUp.active) {
         case .extraLife:
-            GameScene.lives += 1
+            if(GameScene.lives < 4) {
+                GameScene.lives += 1
+                lifeIcons[GameScene.lives-1].hidden = false
+            }
             livesNode.text = "\(GameScene.lives) Lifes"
         case .shield:
             // create shader for actor
-            actorNode.color = UIColor.greenColor()
-            actorNode.colorBlendFactor = 1.0
+            actorNode.color = UIColor.yellowColor()
+            actorNode.colorBlendFactor = 0.8
             PowerUp.shieldActive = true
             
             let wait = SKAction.waitForDuration(PowerUp.shieldDuration)
@@ -634,6 +665,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 selectedHook.removeAllActions()
                 selectedHook.removeFromParent()
             }
+        }
+        
+        if(PowerUp.active == PowerUp.powerupType.staticHook) {
+            selectedHook.ropeNode.texture = Hook.tiledStraightRope
+            selectedHook.ropeNode.size.width = 3
+        } else {
+            selectedHook.ropeNode.texture = Hook.tiledRope
+            selectedHook.ropeNode.size.width = 6
         }
         
         // fire hook above actor

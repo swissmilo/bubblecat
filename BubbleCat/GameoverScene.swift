@@ -24,14 +24,21 @@ class GameoverScene: SKScene {
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         
-        backgroundColor = UIColor.blackColor()
+        // set up node for the background texture
+        let backgroundSize = CGSize(width:self.frame.width,height:self.frame.height)
+        let backgroundNode = SKSpriteNode(texture: SKTexture(imageNamed:"background"), color: UIColor(), size: backgroundSize)
+        backgroundNode.position = CGPoint(x: self.frame.width/2,y: self.frame.height/2)
+        backgroundNode.zPosition = -1
+        addChild(backgroundNode)
         
-        livesNode = SKLabelNode(fontNamed: "Futura-Medium")
-        livesNode.fontSize = 80;
+        //backgroundColor = UIColor.blackColor()
+        
+        livesNode = SKLabelNode(fontNamed: "ChalkboardSE-Regular")
+        livesNode.fontSize = 50;
         livesNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
         livesNode.fontColor = SKColor.whiteColor()
         livesNode.zPosition = 100;
-        livesNode.text = "GAMEOVER"
+        livesNode.text = "Game Over"
         addChild(livesNode)
         
     }

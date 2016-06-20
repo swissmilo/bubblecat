@@ -30,6 +30,7 @@
 		26CFFC661CC16BB40083C8B9 /* Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFFC651CC16BB40083C8B9 /* Actor.swift */; };
 		26D963FE1D000EA90063CECC /* Level3.sks in Resources */ = {isa = PBXBuildFile; fileRef = 26D963FD1D000EA90063CECC /* Level3.sks */; };
 		26E8EAD51D1685A2002BC7FB /* alphachannel.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 26E8EAD41D1685A2002BC7FB /* alphachannel.fsh */; };
+		26E8EAD71D175DF8002BC7FB /* GameStartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E8EAD61D175DF8002BC7FB /* GameStartScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		26CFFC651CC16BB40083C8B9 /* Actor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actor.swift; sourceTree = "<group>"; };
 		26D963FD1D000EA90063CECC /* Level3.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level3.sks; sourceTree = "<group>"; };
 		26E8EAD41D1685A2002BC7FB /* alphachannel.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = alphachannel.fsh; sourceTree = "<group>"; };
+		26E8EAD61D175DF8002BC7FB /* GameStartScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStartScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 				262025C71CB36A1E00BD637E /* Info.plist */,
 				26B7D9091CB77D07006885F0 /* GameoverScene.swift */,
 				26B7D90B1CB7812F006885F0 /* NextScene.swift */,
+				26E8EAD61D175DF8002BC7FB /* GameStartScene.swift */,
 				263AD0C91CB9B2F00056EF9D /* Hook.swift */,
 				263AD0CD1CB9CFCD0056EF9D /* Ball.swift */,
 				263AD0CF1CBAC77E0056EF9D /* Brick.swift */,
@@ -323,6 +326,7 @@
 				263AD0CE1CB9CFCD0056EF9D /* Ball.swift in Sources */,
 				26BA839B1CEEDFCC00F943D2 /* PowerUp.swift in Sources */,
 				262025B81CB36A1E00BD637E /* AppDelegate.swift in Sources */,
+				26E8EAD71D175DF8002BC7FB /* GameStartScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

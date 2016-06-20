@@ -14,6 +14,7 @@ class Hook : SKSpriteNode
     static let ropeImageName = "rope"
     static let hookImageName = "anchor"
     static var tiledRope:SKTexture? = nil
+    static var tiledStraightRope:SKTexture? = nil
     static let hookTex = SKTexture(imageNamed: Hook.hookImageName)
     var ropeNode = SKSpriteNode()
     
@@ -37,11 +38,16 @@ class Hook : SKSpriteNode
         
         if(Hook.tiledRope == nil) {
             let ropeTex = SKTexture(imageNamed: Hook.ropeImageName)
-            Hook.tiledRope = Hook.setTiledFillTexture(Hook.ropeImageName, tileSize: CGSize(width: ropeTex.size().width, height: ropeTex.size().height), targetSize: CGSize(width: ropeTex.size().width, height: ladderHeight))
+            Hook.tiledRope = Hook.setTiledFillTexture(Hook.ropeImageName, tileSize: CGSize(width: ropeTex.size().width, height: ropeTex.size().height/3), targetSize: CGSize(width: ropeTex.size().width, height: ladderHeight))
         }
         
-        ropeNode = SKSpriteNode(texture: Hook.tiledRope)
-        ropeNode.size.width = 6
+        if(Hook.tiledStraightRope == nil) {
+            let ropeTex = SKTexture(imageNamed: "rope_straight")
+            Hook.tiledStraightRope = Hook.setTiledFillTexture("rope_straight", tileSize: CGSize(width: ropeTex.size().width, height: ropeTex.size().height/3), targetSize: CGSize(width: ropeTex.size().width, height: ladderHeight))
+        }
+        
+        ropeNode = SKSpriteNode(texture: Hook.tiledStraightRope)
+        //ropeNode.size.width = 6
         ropeNode.size.height = ladderHeight
         ropeNode.position.y = -ladderHeight/2
         ropeNode.position.x = 0
