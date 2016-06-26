@@ -16,8 +16,13 @@ let PowerupCategory : UInt32 = 0x1 << 5
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    static let backgroundMusic = SKAudioNode(fileNamed: "background.mp3")
+    static let beginSound = SKAudioNode(fileNamed: "begin.mp3")
     static let popSound = SKAudioNode(fileNamed: "blop.mp3")
+    static let breakSound = SKAudioNode(fileNamed: "break.mp3")
+    static let plungerSound = SKAudioNode(fileNamed: "plunger.mp3")
+    static let shotSound = SKAudioNode(fileNamed: "shot.mp3")
+    static let powerupSound = SKAudioNode(fileNamed: "powerup.mp3")
+    static let hitSound = SKAudioNode(fileNamed: "hit.mp3")
 
     static let buttonImageName = "button"
     static let buttonTex = SKTexture(imageNamed: GameScene.buttonImageName)
@@ -56,6 +61,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var startCountdown = false
     var startTime:CFTimeInterval = CFTimeInterval()
     
+    var lastBallHitTime:CFTimeInterval = CFTimeInterval()
+    var updateTimeDiff:CFTimeInterval = CFTimeInterval()
     var timeLimit = 100
     var pausedTimeDifference = 0
     var lastUpdateTime:CFTimeInterval = CFTimeInterval()
@@ -116,11 +123,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(gameNode)
         addChild(layoutNode)
         
+        // wait until scene is complete to add sounds to prevent from crashing
         runAction(SKAction.waitForDuration(0.1), completion: {
-            //self.addChild(GameScene.backgroundMusic)
-            
+
             GameScene.popSound.autoplayLooped = false
+            GameScene.beginSound.autoplayLooped = false
+            GameScene.plungerSound.autoplayLooped = false
+            GameScene.breakSound.autoplayLooped = false
+            GameScene.shotSound.autoplayLooped = false
+            GameScene.powerupSound.autoplayLooped = false
+            GameScene.hitSound.autoplayLooped = false
             self.addChild(GameScene.popSound)
+            self.addChild(GameScene.beginSound)
+            self.addChild(GameScene.plungerSound)
+            self.addChild(GameScene.breakSound)
+            self.addChild(GameScene.shotSound)
+            self.addChild(GameScene.powerupSound)
+            self.addChild(GameScene.hitSound)
         })
         
         setupLayout()
@@ -135,6 +154,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         hooks.append(Hook(hookName: "hook1", ladderHeight: self.view!.frame.height))
         hooks.append(Hook(hookName: "hook2", ladderHeight: self.view!.frame.height))
+        
+        GameScene.beginSound.runAction(SKAction.play())
     }
     
     func setupLayout() {
@@ -422,6 +443,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 powerupNode?.removeAllActions()
                 powerupNode?.removeFromParent()
+                
+                GameScene.powerupSound.runAction(SKAction.play())
             }
         }
         
@@ -499,6 +522,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     firstBody.node?.removeAllActions()
                     firstBody.node?.removeFromParent()
                     powerupLottery(brick.position)
+                    GameScene.breakSound.runAction(SKAction.play())
                     return
                 }
             }
@@ -508,13 +532,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                 firstBody.dynamic = false
                 
-                // reset ball velocities after time starts again
                 let wait = SKAction.waitForDuration(PowerUp.staticHookDuration)
                 let run = SKAction.runBlock {
                     firstBody.node?.removeAllActions()
                     firstBody.node?.removeFromParent()
                 }
                 firstBody.node?.runAction(SKAction.sequence([wait, run]))
+                GameScene.plungerSound.runAction(SKAction.play())
             }
             else {
                 //print("hook ends")
@@ -525,6 +549,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // player loses one life every time they get hit by the ball
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ActorCategory {
+            
+            // prevent sudden gameover from physics engine, no multiple hits within less than 0.05 seconds
+            if(lastUpdateTime - lastBallHitTime < 0.05) {
+                return
+            } else {
+                lastBallHitTime = lastUpdateTime
+            }
             
             // can absorb one hit with shield powerup
             if(PowerUp.shieldActive) {
@@ -539,6 +570,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
                 else {
                     lifeIcons[GameScene.lives].hidden = true
+                    GameScene.hitSound.runAction(SKAction.play())
                 }
             }
         }
@@ -680,6 +712,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         selectedHook.position = CGPoint(x: actorNode.position.x, y: actorNode.position.y)
         gameNode.addChild(selectedHook)
         selectedHook.physicsBody!.applyImpulse(CGVectorMake(0, 1.2))
+        
+        GameScene.shotSound.runAction(SKAction.play())
     }
     
     func isGameFinished() -> Bool {
@@ -760,6 +794,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             pausedTimeDifference = pausedTimeDifference + (Int)(currentTime - lastUpdateTime)
             unpauseActions = false
         }
+        updateTimeDiff = currentTime - lastUpdateTime
         lastUpdateTime = currentTime
         
         if(isGameFinished()) {
@@ -769,6 +804,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // game countdown
         if(startCountdown) {
             startTime = currentTime
+            lastBallHitTime = currentTime
             startCountdown = false
         }
         let countDown = timeLimit - (Int)(currentTime-startTime) + pausedTimeDifference
