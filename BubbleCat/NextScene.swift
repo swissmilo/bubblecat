@@ -46,6 +46,10 @@ class NextScene: SKScene {
         }
         addChild(livesNode)
         
+        let fish = Fish(fishName: "fish", fishSize: CGSize(width: 50, height: 25))
+        fish.position = CGPoint(x: 100, y: 100)
+        addChild(fish)
+        fish.walkFish()
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {

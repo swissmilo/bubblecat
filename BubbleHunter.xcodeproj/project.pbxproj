@@ -26,6 +26,8 @@
 		2631AB7C1D20B8F100994D25 /* Level8.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB771D20B8F100994D25 /* Level8.sks */; };
 		2631AB7D1D20B8F100994D25 /* Level9.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB781D20B8F100994D25 /* Level9.sks */; };
 		2631AB7E1D20B8F100994D25 /* Level10.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB791D20B8F100994D25 /* Level10.sks */; };
+		2631AB801D20D14200994D25 /* FishImages.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB7F1D20D14200994D25 /* FishImages.atlas */; };
+		2631AB821D20D15800994D25 /* Fish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2631AB811D20D15800994D25 /* Fish.swift */; };
 		263AD0CA1CB9B2F00056EF9D /* Hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263AD0C91CB9B2F00056EF9D /* Hook.swift */; };
 		263AD0CC1CB9C7D60056EF9D /* blop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 263AD0CB1CB9C7D60056EF9D /* blop.mp3 */; };
 		263AD0CE1CB9CFCD0056EF9D /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263AD0CD1CB9CFCD0056EF9D /* Ball.swift */; };
@@ -88,6 +90,8 @@
 		2631AB771D20B8F100994D25 /* Level8.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level8.sks; sourceTree = "<group>"; };
 		2631AB781D20B8F100994D25 /* Level9.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level9.sks; sourceTree = "<group>"; };
 		2631AB791D20B8F100994D25 /* Level10.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level10.sks; sourceTree = "<group>"; };
+		2631AB7F1D20D14200994D25 /* FishImages.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = FishImages.atlas; sourceTree = "<group>"; };
+		2631AB811D20D15800994D25 /* Fish.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fish.swift; sourceTree = "<group>"; };
 		263AD0C91CB9B2F00056EF9D /* Hook.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hook.swift; sourceTree = "<group>"; };
 		263AD0CB1CB9C7D60056EF9D /* blop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blop.mp3; sourceTree = "<group>"; };
 		263AD0CD1CB9CFCD0056EF9D /* Ball.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
@@ -157,6 +161,7 @@
 			children = (
 				26B7D9071CB76686006885F0 /* HunterImages.atlas */,
 				26C037B91CB4CE3D002F58AE /* Main.storyboard */,
+				2631AB7F1D20D14200994D25 /* FishImages.atlas */,
 				26C037BC1CB4CF68002F58AE /* LaunchScreen.storyboard */,
 				262025B71CB36A1E00BD637E /* AppDelegate.swift */,
 				262025BB1CB36A1E00BD637E /* GameScene.swift */,
@@ -181,6 +186,7 @@
 				2631AB711D20B1CA00994D25 /* Level4.sks */,
 				2631AB721D20B1CA00994D25 /* Level5.sks */,
 				26CFFC651CC16BB40083C8B9 /* Actor.swift */,
+				2631AB811D20D15800994D25 /* Fish.swift */,
 				2631AB6F1D2096D700994D25 /* hit.mp3 */,
 				26BA839A1CEEDFCC00F943D2 /* PowerUp.swift */,
 				2631AB651D20930200994D25 /* begin.mp3 */,
@@ -320,6 +326,7 @@
 				26C037BE1CB4CF68002F58AE /* LaunchScreen.storyboard in Resources */,
 				2631AB6A1D20930200994D25 /* begin.mp3 in Resources */,
 				2631AB7D1D20B8F100994D25 /* Level9.sks in Resources */,
+				2631AB801D20D14200994D25 /* FishImages.atlas in Resources */,
 				263AD0CC1CB9C7D60056EF9D /* blop.mp3 in Resources */,
 				2631AB6C1D20930200994D25 /* plunger.mp3 in Resources */,
 				2631AB7B1D20B8F100994D25 /* Level7.sks in Resources */,
@@ -371,6 +378,7 @@
 				26B7D90A1CB77D07006885F0 /* GameoverScene.swift in Sources */,
 				263AD0CA1CB9B2F00056EF9D /* Hook.swift in Sources */,
 				26CFFC661CC16BB40083C8B9 /* Actor.swift in Sources */,
+				2631AB821D20D15800994D25 /* Fish.swift in Sources */,
 				263AD0CE1CB9CFCD0056EF9D /* Ball.swift in Sources */,
 				26BA839B1CEEDFCC00F943D2 /* PowerUp.swift in Sources */,
 				262025B81CB36A1E00BD637E /* AppDelegate.swift in Sources */,

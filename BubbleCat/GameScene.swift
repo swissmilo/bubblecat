@@ -113,7 +113,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.contactDelegate = self
         
         physicsWorld.gravity = CGVectorMake(0.0, -6);
-        physicsWorld.speed = 0.9
+        physicsWorld.speed = 0.8
  
         // If was gameover, reset lifes
         if(GameScene.lives <= 0) {
@@ -474,7 +474,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.ballNameCounter = self.ballNameCounter + 1
                     leftBall.position = CGPoint(x: currentBall!.position.x-10, y: currentBall!.position.y)
                     gameNode.addChild(leftBall)
-                    leftBall.physicsBody!.applyImpulse(CGVectorMake(-Ball.getPushVelocity(leftBall.sizeOfBall), 0))
+                    leftBall.physicsBody!.applyImpulse(CGVectorMake(-Ball.getPushVelocity(leftBall.sizeOfBall), 3))
                     //print(leftBall.physicsBody!.velocity.dx)
                     leftBall.lastVelocityX = leftBall.physicsBody!.velocity.dx
                     
@@ -482,7 +482,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.ballNameCounter = self.ballNameCounter + 1
                     rightBall.position = CGPoint(x: currentBall!.position.x+10, y: currentBall!.position.y)
                     gameNode.addChild(rightBall)
-                    rightBall.physicsBody!.applyImpulse(CGVectorMake(Ball.getPushVelocity(rightBall.sizeOfBall), 0))
+                    rightBall.physicsBody!.applyImpulse(CGVectorMake(Ball.getPushVelocity(rightBall.sizeOfBall), 3))
                     rightBall.lastVelocityX = rightBall.physicsBody!.velocity.dx
                     
                     if(self.timeStopActiveCounter > 0) {
@@ -580,8 +580,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func powerupLottery(point: CGPoint) {
-        // 20% chance of spawning a powerup
-        if(rand() % 5 == 0) {
+        // 33% chance of spawning a powerup
+        if(rand() % 3 == 0) {
         
             // randomly pick one of the 6 available powerups
             let powerupType = PowerUp.randomPowerUp()
