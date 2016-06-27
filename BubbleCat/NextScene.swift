@@ -11,7 +11,7 @@ import SpriteKit
 class NextScene: SKScene {
     
     var livesNode: SKLabelNode = SKLabelNode()
-    let newscene = GameScene.unarchiveFromFile("Level\(GameScene.levelSelector)") as? GameScene
+    let newscene = GameScene.unarchiveFromFile("Level\(GameScene.levelSelector+1)") as? GameScene
     
     override init(size: CGSize) {
         

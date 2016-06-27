@@ -33,7 +33,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     static let lifeIconTex = SKTexture(imageNamed: "powerup_1")
     var lifeIcons = [SKSpriteNode]()
     
-    static let firstLevel = 10
+    static let firstLevel = 1
     static var levelSelector = firstLevel
     
     let swipeAreaName = "swipe"
@@ -193,7 +193,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             SKUniform(name: "size", floatVector3: GLKVector3Make(Float(GameScene.backgroudTex.size().width), Float(GameScene.backgroudTex.size().height), 0)),
             SKUniform(name: "customTexture", texture: GameScene.backgroudTex)
         ]
-        //backgroundNode.shader = shader
+        backgroundNode.shader = shader
         
         layoutNode.addChild(backgroundNode)
         
