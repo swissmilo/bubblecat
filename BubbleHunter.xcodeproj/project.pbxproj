@@ -19,6 +19,13 @@
 		2631AB6D1D20930200994D25 /* break.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB681D20930200994D25 /* break.mp3 */; };
 		2631AB6E1D20930200994D25 /* shot.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB691D20930200994D25 /* shot.mp3 */; };
 		2631AB701D2096D700994D25 /* hit.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB6F1D2096D700994D25 /* hit.mp3 */; };
+		2631AB731D20B1CA00994D25 /* Level4.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB711D20B1CA00994D25 /* Level4.sks */; };
+		2631AB741D20B1CA00994D25 /* Level5.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB721D20B1CA00994D25 /* Level5.sks */; };
+		2631AB7A1D20B8F100994D25 /* Level6.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB751D20B8F100994D25 /* Level6.sks */; };
+		2631AB7B1D20B8F100994D25 /* Level7.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB761D20B8F100994D25 /* Level7.sks */; };
+		2631AB7C1D20B8F100994D25 /* Level8.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB771D20B8F100994D25 /* Level8.sks */; };
+		2631AB7D1D20B8F100994D25 /* Level9.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB781D20B8F100994D25 /* Level9.sks */; };
+		2631AB7E1D20B8F100994D25 /* Level10.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2631AB791D20B8F100994D25 /* Level10.sks */; };
 		263AD0CA1CB9B2F00056EF9D /* Hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263AD0C91CB9B2F00056EF9D /* Hook.swift */; };
 		263AD0CC1CB9C7D60056EF9D /* blop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 263AD0CB1CB9C7D60056EF9D /* blop.mp3 */; };
 		263AD0CE1CB9CFCD0056EF9D /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263AD0CD1CB9CFCD0056EF9D /* Ball.swift */; };
@@ -74,6 +81,13 @@
 		2631AB681D20930200994D25 /* break.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = break.mp3; sourceTree = "<group>"; };
 		2631AB691D20930200994D25 /* shot.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shot.mp3; sourceTree = "<group>"; };
 		2631AB6F1D2096D700994D25 /* hit.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hit.mp3; sourceTree = "<group>"; };
+		2631AB711D20B1CA00994D25 /* Level4.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level4.sks; sourceTree = "<group>"; };
+		2631AB721D20B1CA00994D25 /* Level5.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level5.sks; sourceTree = "<group>"; };
+		2631AB751D20B8F100994D25 /* Level6.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level6.sks; sourceTree = "<group>"; };
+		2631AB761D20B8F100994D25 /* Level7.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level7.sks; sourceTree = "<group>"; };
+		2631AB771D20B8F100994D25 /* Level8.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level8.sks; sourceTree = "<group>"; };
+		2631AB781D20B8F100994D25 /* Level9.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level9.sks; sourceTree = "<group>"; };
+		2631AB791D20B8F100994D25 /* Level10.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level10.sks; sourceTree = "<group>"; };
 		263AD0C91CB9B2F00056EF9D /* Hook.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hook.swift; sourceTree = "<group>"; };
 		263AD0CB1CB9C7D60056EF9D /* blop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blop.mp3; sourceTree = "<group>"; };
 		263AD0CD1CB9CFCD0056EF9D /* Ball.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
@@ -159,6 +173,13 @@
 				26CFFC631CC166D00083C8B9 /* Level2.sks */,
 				26D963FD1D000EA90063CECC /* Level3.sks */,
 				263AD0D11CBB4AF40056EF9D /* Level1.sks */,
+				2631AB751D20B8F100994D25 /* Level6.sks */,
+				2631AB761D20B8F100994D25 /* Level7.sks */,
+				2631AB771D20B8F100994D25 /* Level8.sks */,
+				2631AB781D20B8F100994D25 /* Level9.sks */,
+				2631AB791D20B8F100994D25 /* Level10.sks */,
+				2631AB711D20B1CA00994D25 /* Level4.sks */,
+				2631AB721D20B1CA00994D25 /* Level5.sks */,
 				26CFFC651CC16BB40083C8B9 /* Actor.swift */,
 				2631AB6F1D2096D700994D25 /* hit.mp3 */,
 				26BA839A1CEEDFCC00F943D2 /* PowerUp.swift */,
@@ -298,15 +319,22 @@
 			files = (
 				26C037BE1CB4CF68002F58AE /* LaunchScreen.storyboard in Resources */,
 				2631AB6A1D20930200994D25 /* begin.mp3 in Resources */,
+				2631AB7D1D20B8F100994D25 /* Level9.sks in Resources */,
 				263AD0CC1CB9C7D60056EF9D /* blop.mp3 in Resources */,
 				2631AB6C1D20930200994D25 /* plunger.mp3 in Resources */,
+				2631AB7B1D20B8F100994D25 /* Level7.sks in Resources */,
+				2631AB741D20B1CA00994D25 /* Level5.sks in Resources */,
+				2631AB7E1D20B8F100994D25 /* Level10.sks in Resources */,
 				263AD0D21CBB4AF40056EF9D /* Level1.sks in Resources */,
+				2631AB7A1D20B8F100994D25 /* Level6.sks in Resources */,
 				26D963FE1D000EA90063CECC /* Level3.sks in Resources */,
 				262025C31CB36A1E00BD637E /* Assets.xcassets in Resources */,
 				26C037BB1CB4CE3D002F58AE /* Main.storyboard in Resources */,
 				26E8EAD51D1685A2002BC7FB /* alphachannel.fsh in Resources */,
 				26CFFC641CC166D00083C8B9 /* Level2.sks in Resources */,
+				2631AB7C1D20B8F100994D25 /* Level8.sks in Resources */,
 				2631AB701D2096D700994D25 /* hit.mp3 in Resources */,
+				2631AB731D20B1CA00994D25 /* Level4.sks in Resources */,
 				266BC1911D13A9910050DA1E /* underwater.fsh in Resources */,
 				2631AB6E1D20930200994D25 /* shot.mp3 in Resources */,
 				26B7D9081CB76686006885F0 /* HunterImages.atlas in Resources */,

@@ -11,6 +11,7 @@ import SpriteKit
 class NextScene: SKScene {
     
     var livesNode: SKLabelNode = SKLabelNode()
+    let newscene = GameScene.unarchiveFromFile("Level\(GameScene.levelSelector)") as? GameScene
     
     override init(size: CGSize) {
         
@@ -38,7 +39,11 @@ class NextScene: SKScene {
         livesNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
         livesNode.fontColor = SKColor.whiteColor()
         livesNode.zPosition = 100;
-        livesNode.text = "Level \(GameScene.levelSelector) Complete!"
+        if(newscene != nil) {
+            livesNode.text = "Level \(GameScene.levelSelector) Complete!"
+        } else {
+            livesNode.text = "Game Complete!"
+        }
         addChild(livesNode)
         
     }
@@ -50,7 +55,7 @@ class NextScene: SKScene {
         let transition = SKTransition.revealWithDirection(SKTransitionDirection.Down, duration: 1.0)
         
         GameScene.levelSelector += 1
-        let newscene = GameScene.unarchiveFromFile("Level\(GameScene.levelSelector)") as? GameScene
+        //let newscene = GameScene.unarchiveFromFile("Level\(GameScene.levelSelector)") as? GameScene
         //let newscene = GameScene(size: view!.bounds.size)
         if(newscene != nil) {
             newscene!.scaleMode = .AspectFit

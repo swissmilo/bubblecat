@@ -37,7 +37,10 @@ class Actor : SKSpriteNode
         
         // TODO create different physics bodies for each frame
         //self.physicsBody = SKPhysicsBody(texture: Actor.walkFrames[0], size: self.size)
-        self.physicsBody = SKPhysicsBody(rectangleOfSize: actorSize)
+        
+        // adjust width of collision area because the width of the image includes the walking animation
+        self.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: actorSize.width*0.6, height: actorSize.height))
+        //self.physicsBody = SKPhysicsBody(circleOfRadius: actorSize.height/2)
         self.physicsBody!.allowsRotation = false
         self.physicsBody!.friction = 0
         self.physicsBody!.restitution = 0
