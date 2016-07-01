@@ -14,6 +14,7 @@ class Fish : SKSpriteNode
     static let fishImageName = "fish"
     static var walkFrames = [SKTexture]()
     var isFishMoving : Bool = false
+    //var isReversed : Bool = false
     
     init(fishName:String, fishSize:CGSize) {
      
@@ -47,7 +48,7 @@ class Fish : SKSpriteNode
             // TODO adjust walking speed dependent on distance
             self.runAction(SKAction.repeatActionForever(
                 SKAction.animateWithTextures(Fish.walkFrames,
-                    timePerFrame: 0.1,
+                    timePerFrame: 0.2,
                     resize: false,
                     restore: true)),
                                 withKey:"walkingInPlace")

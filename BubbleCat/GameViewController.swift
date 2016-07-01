@@ -43,6 +43,7 @@ class GameViewController: UIViewController {
         //let scene = GameScene.unarchiveFromFile("Level\(GameScene.levelSelector)") as! GameScene
         
         let scene = GameStartScene(size: view!.bounds.size)
+        //let scene = NextScene(size: view!.bounds.size)
         
         /* Set the scale mode to scale to fit the window */
         //let scene = GameScene(size: view.bounds.size)

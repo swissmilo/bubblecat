@@ -12,6 +12,7 @@ class NextScene: SKScene {
     
     var livesNode: SKLabelNode = SKLabelNode()
     let newscene = GameScene.unarchiveFromFile("Level\(GameScene.levelSelector+1)") as? GameScene
+    let fish = Fish(fishName: "fish", fishSize: CGSize(width: 50, height: 25))
     
     override init(size: CGSize) {
         
@@ -46,10 +47,15 @@ class NextScene: SKScene {
         }
         addChild(livesNode)
         
-        let fish = Fish(fishName: "fish", fishSize: CGSize(width: 50, height: 25))
+        //let fish = Fish(fishName: "fish", fishSize: CGSize(width: 50, height: 25))
         fish.position = CGPoint(x: 100, y: 100)
         addChild(fish)
         fish.walkFish()
+        
+        let circle = UIBezierPath(ovalInRect: CGRectMake(50, 50, CGRectGetMaxX(self.frame)-100, CGRectGetMaxY(self.frame)-100))
+        let followCircle = SKAction.followPath(circle.CGPath, asOffset: false, orientToPath: false, duration: 10.0)
+        fish.runAction(SKAction.repeatActionForever(followCircle))
+        // TODO: reverse half way in update function if below mid y point
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -69,6 +75,15 @@ class NextScene: SKScene {
             let newgame = GameStartScene(size: view!.bounds.size)
             newgame.scaleMode = .AspectFit
             self.scene!.view!.presentScene(newgame, transition: transition)
+        }
+    }
+    
+    override func update(currentTime: CFTimeInterval) {
+        
+        if(fish.position.y > CGRectGetMidY(self.frame)) {
+            fish.xScale = fabs(fish.xScale)
+        } else {
+            fish.xScale = -fabs(fish.xScale)
         }
     }
 }
