@@ -35,6 +35,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     static let firstLevel = 1
     static var levelSelector = firstLevel
+    static var gameFirstStarted:Bool = true
+    
+    static let handNode = SKSpriteNode(texture: SKTexture(imageNamed:"hand"), color: UIColor(), size: CGSize(width:20,height:30))
+    static let fingerNode = SKSpriteNode(texture: SKTexture(imageNamed:"finger"), color: UIColor(), size: CGSize(width:30,height:30))
     
     let swipeAreaName = "swipe"
     let buttonAreaName = "button"
@@ -201,15 +205,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let controlSize = CGSize(width:self.frame.width,height:controlPanelHeight)
         let controlNode = SKSpriteNode(texture: GameScene.sliderTex, size: controlSize)
         controlNode.position = CGPoint(x: controlSize.width/2,y: controlSize.height/2)
-        controlNode.zPosition = 99
+        controlNode.zPosition = 98
         layoutNode.addChild(controlNode)
         
         // slider itself has no texture, just a physics body to capture touch events
-        let panelSize = CGSize(width:controlPanelWidth,height:controlPanelHeight)
+        let panelSize = CGSize(width:controlPanelWidth,height:controlPanelHeight+20)
         swipeNode = SKSpriteNode()
         swipeNode.size = panelSize
         swipeNode.position = CGPoint(x: panelSize.width/2,y: panelSize.height/2)
-        swipeNode.zPosition = 100
+        swipeNode.zPosition = 99
         swipeNode.physicsBody = SKPhysicsBody(rectangleOfSize: panelSize)
         swipeNode.physicsBody!.dynamic = false
         swipeNode.name = swipeAreaName
@@ -218,7 +222,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let buttonSize = CGSize(width:controlPanelHeight+20,height:controlPanelHeight)
         buttonNode = SKSpriteNode(texture: GameScene.buttonTex, size: buttonSize)
         buttonNode.position = CGPoint(x: controlPanelWidth + buttonSize.width/2 - 20,y: buttonSize.height/2)
-        buttonNode.zPosition = 100
+        buttonNode.zPosition = 99
         buttonNode.physicsBody = SKPhysicsBody(rectangleOfSize: buttonSize)
         buttonNode.physicsBody!.dynamic = false
         buttonNode.name = buttonAreaName
@@ -257,6 +261,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(GameScene.lives < (i+1)) {
                 lifeIcons[i].hidden = true
             }
+        }
+        
+        if(GameScene.gameFirstStarted) {
+            
+            //let handNode = SKSpriteNode(texture: SKTexture(imageNamed:"hand"), color: UIColor(), size: CGSize(width:20,height:30))
+            GameScene.handNode.position = CGPoint(x: panelSize.width/2,y: panelSize.height/2-10)
+            GameScene.handNode.zPosition = 100;
+            GameScene.handNode.name = "hand"
+            layoutNode.addChild(GameScene.handNode)
+            
+            //let fingerNode = SKSpriteNode(texture: SKTexture(imageNamed:"finger"), color: UIColor(), size: CGSize(width:30,height:30))
+            GameScene.fingerNode.position = CGPoint(x: controlPanelWidth + buttonSize.width/2 - 20,y: buttonSize.height/2)
+            GameScene.fingerNode.zPosition = 100;
+            GameScene.fingerNode.name = "finger"
+            layoutNode.addChild(GameScene.fingerNode)
+            
+            let moveinout = SKAction.sequence([SKAction.scaleTo(0.7, duration: 0.5), SKAction.scaleTo(1.0, duration: 0.5)])
+            GameScene.fingerNode.runAction(SKAction.repeatActionForever(moveinout))
+            
+            let moveleftright = SKAction.sequence([SKAction.moveByX(80, y: 0, duration: 0.8), SKAction.waitForDuration(0.2), SKAction.moveByX(-80, y: 0, duration: 0.8), SKAction.waitForDuration(0.2)])
+            GameScene.handNode.runAction(SKAction.repeatActionForever(moveleftright))
+            
+  
         }
         
         //print("panel height is \(controlPanelHeight)")
@@ -307,7 +334,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
        // Called when a touch begins
         
         if(gameRunning == false) {
+
+            
             beginGame()
+        }
+        else {
+            if(GameScene.gameFirstStarted) {
+                GameScene.gameFirstStarted = false
+                
+                GameScene.handNode.removeAllActions()
+                GameScene.handNode.removeFromParent()
+                GameScene.fingerNode.removeAllActions()
+                GameScene.fingerNode.removeFromParent()
+            }
         }
         
         let touch:UITouch = touches.first!

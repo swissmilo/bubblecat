@@ -49,6 +49,7 @@ class NextScene: SKScene {
         
         //let fish = Fish(fishName: "fish", fishSize: CGSize(width: 50, height: 25))
         fish.position = CGPoint(x: 100, y: 100)
+        fish.xScale = -1
         addChild(fish)
         fish.walkFish()
         
