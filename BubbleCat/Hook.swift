@@ -73,11 +73,11 @@ class Hook : SKSpriteNode
         
         UIGraphicsBeginImageContext(targetSize)
         let contextRef = UIGraphicsGetCurrentContext()
-        CGContextDrawTiledImage(contextRef, CGRect(origin: CGPointZero, size: tileSize), targetRef)
+        CGContextDrawTiledImage(contextRef!, CGRect(origin: CGPointZero, size: tileSize), targetRef!)
         let tiledTexture = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return SKTexture(image: tiledTexture)
+        return SKTexture(image: tiledTexture!)
     }
     
 }

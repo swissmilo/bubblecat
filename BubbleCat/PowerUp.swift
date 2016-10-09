@@ -72,7 +72,7 @@ class PowerUp : SKSpriteNode
     
     // choose a random powerup with some probabilities
     static func randomPowerUp() -> powerupType {
-        switch (rand() % 100) {
+        switch (arc4random() % 100) {
         case 0..<10:
             return powerupType.extraLife
         case 10..<25:

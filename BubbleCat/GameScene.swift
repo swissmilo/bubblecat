@@ -37,8 +37,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     static var levelSelector = firstLevel
     static var gameFirstStarted:Bool = true
     
-    static let handNode = SKSpriteNode(texture: SKTexture(imageNamed:"hand"), color: UIColor(), size: CGSize(width:20,height:30))
-    static let fingerNode = SKSpriteNode(texture: SKTexture(imageNamed:"finger"), color: UIColor(), size: CGSize(width:30,height:30))
+    //static let handNode = SKSpriteNode(texture: SKTexture(imageNamed:"hand"), color: UIColor(), size: CGSize(width:20,height:30))
+    //static let fingerNode = SKSpriteNode(texture: SKTexture(imageNamed:"finger"), color: UIColor(), size: CGSize(width:30,height:30))
+    
+    static var dark = SKShapeNode()
+    static let instructionNode = SKLabelNode()
+    static let instructionNode2 = SKLabelNode()
     
     let swipeAreaName = "swipe"
     let buttonAreaName = "button"
@@ -265,6 +269,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if(GameScene.gameFirstStarted) {
             
+            GameScene.dark = SKShapeNode(rectOfSize: CGSize(width:self.frame.width,height:self.frame.height))
+            GameScene.dark.fillColor = UIColor.blackColor()
+            GameScene.dark.alpha = 0.8
+            GameScene.dark.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
+            GameScene.dark.zPosition = 200
+            layoutNode.addChild(GameScene.dark)
+            
+            GameScene.instructionNode.fontSize = 20;
+            GameScene.instructionNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame)+20)
+            GameScene.instructionNode.fontColor = SKColor.whiteColor()
+            GameScene.instructionNode.zPosition = 201;
+            GameScene.instructionNode.text = "To move: use left thumb to swipe on the sandbar"
+            layoutNode.addChild(GameScene.instructionNode)
+            
+            GameScene.instructionNode2.fontSize = 20;
+            GameScene.instructionNode2.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame)-20)
+            GameScene.instructionNode2.fontColor = SKColor.whiteColor()
+            GameScene.instructionNode2.zPosition = 201;
+            GameScene.instructionNode2.text = "To shoot: use right thumb to press on the red starfish"
+            layoutNode.addChild(GameScene.instructionNode2)
+            
+            /*
             //let handNode = SKSpriteNode(texture: SKTexture(imageNamed:"hand"), color: UIColor(), size: CGSize(width:20,height:30))
             GameScene.handNode.position = CGPoint(x: panelSize.width/2,y: panelSize.height/2-10)
             GameScene.handNode.zPosition = 100;
@@ -282,7 +308,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             let moveleftright = SKAction.sequence([SKAction.moveByX(80, y: 0, duration: 0.8), SKAction.waitForDuration(0.2), SKAction.moveByX(-80, y: 0, duration: 0.8), SKAction.waitForDuration(0.2)])
             GameScene.handNode.runAction(SKAction.repeatActionForever(moveleftright))
-            
+            */
   
         }
         
@@ -342,10 +368,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(GameScene.gameFirstStarted) {
                 GameScene.gameFirstStarted = false
                 
+                GameScene.dark.removeFromParent()
+                GameScene.instructionNode.removeFromParent()
+                GameScene.instructionNode2.removeFromParent()
+                
+                /*
                 GameScene.handNode.removeAllActions()
                 GameScene.handNode.removeFromParent()
                 GameScene.fingerNode.removeAllActions()
                 GameScene.fingerNode.removeFromParent()
+                */
             }
         }
         
@@ -620,7 +652,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func powerupLottery(point: CGPoint) {
         // 33% chance of spawning a powerup
-        if(rand() % 3 == 0) {
+        if(arc4random() % 3 == 0) {
         
             // randomly pick one of the 6 available powerups
             let powerupType = PowerUp.randomPowerUp()
